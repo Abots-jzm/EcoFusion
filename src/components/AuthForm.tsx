@@ -1,14 +1,17 @@
 import React from "react";
-import { MdEmail, MdLock } from "react-icons/md";
+import { MdEmail, MdErrorOutline, MdLock } from "react-icons/md";
 import { IoLogoGoogle } from "react-icons/io";
 import Link from "next/link";
 import { UseFormRegister } from "react-hook-form";
 import { Credentials } from "@/app/(auth)/types";
+import { AxiosError } from "axios";
 
 type Props = {
   register: UseFormRegister<Credentials>;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   title: string;
+  isLoading: boolean;
+  error?: AxiosError;
   showOtherSigninOptions?: boolean;
   otherPageData: {
     link: string;
@@ -21,6 +24,8 @@ function AuthForm({
   register,
   handleSubmit,
   title,
+  isLoading,
+  error,
   showOtherSigninOptions,
   otherPageData,
 }: Props) {
@@ -54,11 +59,27 @@ function AuthForm({
             required
           />
         </div>
+        {error && (
+          <div className="relative flex items-center text-sm text-red-600">
+            <div className="absolute top-1 grid place-items-center">
+              <MdErrorOutline />
+            </div>
+            <span className="ml-4">
+              {title === "Register"
+                ? (error.response?.data as string)
+                : error.message}
+            </span>
+          </div>
+        )}
         <button
-          className="flex items-center justify-center gap-4 rounded-lg border border-black bg-black p-2 font-semibold text-white transition-all hover:bg-white hover:text-black"
+          className="group flex items-center justify-center gap-4 rounded-lg border border-black bg-black p-2 font-semibold text-white transition-all hover:bg-white hover:text-black disabled:opacity-50"
+          disabled={isLoading}
           type="submit"
         >
-          {title}
+          <span>{title}</span>
+          {isLoading && (
+            <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-white group-hover:border-black" />
+          )}
         </button>
       </form>
       {showOtherSigninOptions && (

@@ -5,10 +5,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Credentials } from "../types";
 import { useRegister } from "@/hooks/auth/useRegister";
+import { AxiosError } from "axios";
 
 function Register() {
   const { register, handleSubmit } = useForm<Credentials>();
-  const { registerUser, isLoading, error } = useRegister();
+  const { registerUser, isRegistering, registerError } = useRegister();
+  const typedError = registerError as AxiosError;
 
   function onFormSubmit(credentials: Credentials) {
     registerUser(credentials);
@@ -19,6 +21,8 @@ function Register() {
       register={register}
       handleSubmit={handleSubmit(onFormSubmit)}
       title="Register"
+      isLoading={isRegistering}
+      error={typedError}
       otherPageData={{
         link: "/login",
         linkQuestion: "Already have an account?",

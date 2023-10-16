@@ -11,5 +11,9 @@ export function useRegister() {
     mutationFn: register,
   });
 
-  return { registerUser: mutate, isLoading, error };
+  return {
+    registerUser: mutate,
+    isRegistering: isLoading,
+    registerError: error,
+  };
 }
