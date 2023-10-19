@@ -18,6 +18,11 @@ type Props = {
     linkText: string;
     linkQuestion: string;
   };
+  googleSignInOptions?: {
+    onGoogleSignIn: () => void;
+    isSigningInWithGoogle: boolean;
+    googleSignInError: AxiosError;
+  };
 };
 
 function AuthForm({
@@ -27,6 +32,7 @@ function AuthForm({
   isLoading,
   error,
   showOtherSigninOptions,
+  googleSignInOptions,
   otherPageData,
 }: Props) {
   return (
@@ -86,11 +92,17 @@ function AuthForm({
         <>
           <div className="py-5 text-center">or</div>
           <div className="flex flex-col gap-4 font-medium">
-            <button className="relative flex items-center justify-center gap-4 rounded-lg border border-black bg-white p-2 text-black transition-all hover:bg-black hover:text-white">
+            <button
+              className="group relative flex items-center justify-center gap-4 rounded-lg border border-black bg-white p-2 text-black transition-all hover:bg-black hover:text-white"
+              onClick={googleSignInOptions?.onGoogleSignIn}
+            >
               <div className="absolute left-6">
                 <IoLogoGoogle />
               </div>
-              Sign in with Google
+              <span>Sign in with Google</span>
+              {googleSignInOptions?.isSigningInWithGoogle && (
+                <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-black group-hover:border-white" />
+              )}
             </button>
             <button className="flex items-center justify-center gap-4 rounded-lg border border-black bg-white p-2 text-black transition-all hover:bg-black hover:text-white">
               Continue as guest

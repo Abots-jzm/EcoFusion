@@ -6,7 +6,7 @@ function register(credentials: Credentials) {
   return axios.post("/api/register", credentials);
 }
 
-export function useRegister() {
+function useRegister() {
   const { mutate, isLoading, error } = useMutation({
     mutationFn: register,
   });
@@ -17,3 +17,5 @@ export function useRegister() {
     registerError: error,
   };
 }
+
+export default useRegister;

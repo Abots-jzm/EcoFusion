@@ -4,7 +4,7 @@ import AuthForm from "@/components/AuthForm";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Credentials } from "../types";
-import { useRegister } from "@/hooks/auth/useRegister";
+import useRegister from "@/hooks/auth/useRegister";
 import { AxiosError } from "axios";
 
 function Register() {
