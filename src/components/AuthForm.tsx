@@ -70,11 +70,7 @@ function AuthForm({
             <div className="absolute top-1 grid place-items-center">
               <MdErrorOutline />
             </div>
-            <span className="ml-4">
-              {title === "Register"
-                ? (error.response?.data as string)
-                : error.message}
-            </span>
+            <span className="ml-4">{error.message}</span>
           </div>
         )}
         <button
@@ -103,9 +99,6 @@ function AuthForm({
               {googleSignInOptions?.isSigningInWithGoogle && (
                 <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-black group-hover:border-white" />
               )}
-            </button>
-            <button className="flex items-center justify-center gap-4 rounded-lg border border-black bg-white p-2 text-black transition-all hover:bg-black hover:text-white">
-              Continue as guest
             </button>
           </div>
         </>

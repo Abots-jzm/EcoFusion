@@ -1,7 +1,7 @@
-import { Credentials } from "@/app/(auth)/types";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { signIn } from "next-auth/react";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 
 async function googleSignIn() {
   const res = await signIn("google");
@@ -11,8 +11,13 @@ async function googleSignIn() {
 }
 
 function useGoogleSignIn() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
   const { mutate, isLoading, error } = useMutation({
     mutationFn: googleSignIn,
+    onSuccess: () => router.replace(callbackUrl || "/dashboard"),
   });
 
   return {

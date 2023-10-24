@@ -11,11 +11,11 @@ import useGoogleSignIn from "@/hooks/auth/useGoogleSignIn";
 function Login() {
   const { register, handleSubmit } = useForm<Credentials>();
   const { login, isLoggingIn, loginError } = useLogin();
-    const { googleSignIn, isSigningInWithGoogle, googleSignInError } =
-      useGoogleSignIn();
+  const { googleSignIn, isSigningInWithGoogle, googleSignInError } =
+    useGoogleSignIn();
 
   const typedError = loginError as AxiosError;
-  const typedGoogleError = googleSignInError as AxiosError
+  const typedGoogleError = googleSignInError as AxiosError;
 
   function onFormSubmit(credentials: Credentials) {
     login(credentials);
@@ -41,7 +41,7 @@ function Login() {
       googleSignInOptions={{
         onGoogleSignIn,
         googleSignInError: typedGoogleError,
-        isSigningInWithGoogle
+        isSigningInWithGoogle,
       }}
     />
   );

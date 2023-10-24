@@ -38,13 +38,17 @@ export const authoptions: NextAuthOptions = {
 
         if (!passwordMatch) throw new Error("Incorrect username or password");
 
-        return user;
+        const { hashedPassword, ...userWithoutPassword } = user;
+        return userWithoutPassword;
       },
     }),
   ],
-  secret: process.env.SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
   debug: process.env.NODE_ENV === "development",
+  pages: {
+    signIn: "/login",
+  },
 };

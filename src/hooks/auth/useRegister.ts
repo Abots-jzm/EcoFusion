@@ -1,14 +1,30 @@
 import { Credentials } from "@/app/(auth)/types";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-function register(credentials: Credentials) {
-  return axios.post("/api/register", credentials);
+async function register(credentials: Credentials) {
+  const registerResponse = await axios.post("/api/register", credentials, {
+    validateStatus: () => true,
+  });
+  if (registerResponse.status === 400)
+    throw new AxiosError(registerResponse.data);
+
+  const res = await signIn("credentials", { ...credentials, redirect: false });
+  if (res?.error) throw new AxiosError(res.error);
+
+  return res;
 }
 
 function useRegister() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+
   const { mutate, isLoading, error } = useMutation({
     mutationFn: register,
+    onSuccess: () => router.replace(callbackUrl || "/dashboard"),
   });
 
   return {

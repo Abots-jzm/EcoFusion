@@ -6,7 +6,7 @@ type Props = {
 };
 
 export const metadata: Metadata = {
-  title: "Store | Signin",
+  title: "EcoFusion | Signin",
 };
 
 function AuthLayout({ children }: Props) {
