@@ -1,10 +1,10 @@
-import React from "react";
-import { MdEmail, MdErrorOutline, MdLock } from "react-icons/md";
-import { IoLogoGoogle } from "react-icons/io";
-import Link from "next/link";
-import { UseFormRegister } from "react-hook-form";
-import { Credentials } from "@/app/(auth)/types";
+import { Credentials } from "@/app/api/register/types";
 import { AxiosError } from "axios";
+import Link from "next/link";
+import React from "react";
+import { UseFormRegister } from "react-hook-form";
+import { IoLogoGoogle } from "react-icons/io";
+import { MdEmail, MdErrorOutline, MdLock } from "react-icons/md";
 
 type Props = {
   register: UseFormRegister<Credentials>;

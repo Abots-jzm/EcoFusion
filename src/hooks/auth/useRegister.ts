@@ -1,4 +1,4 @@
-import { Credentials } from "@/app/(auth)/types";
+import { Credentials } from "@/app/api/register/types";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { signIn } from "next-auth/react";

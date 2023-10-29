@@ -13,13 +13,15 @@ datasource db {
 model User {
   id             String    @id @default(cuid())
   name           String?
-  email          String?   @unique
+  email          String    @unique
   emailVerified  DateTime?
   image          String?
   hashedPassword String?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   accounts       Account[]
+  stores         Store[]
+  lastSelected   String?
 }
 
 model Account {
@@ -38,4 +40,13 @@ model Account {
   session_state     String?
 
   @@unique([provider, providerAccountId])
+}
+
+model Store {
+  id      String @id @default(cuid())
+  name    String
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerId, name])
 }

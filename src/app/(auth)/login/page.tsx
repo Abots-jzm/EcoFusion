@@ -1,12 +1,11 @@
 "use client";
 
-import AuthForm from "@/components/AuthForm";
-import React from "react";
-import { Credentials } from "../types";
-import { useForm } from "react-hook-form";
+import AuthForm from "@/components/auth/AuthForm";
+import useGoogleSignIn from "@/hooks/auth/useGoogleSignIn";
 import useLogin from "@/hooks/auth/useLogin";
 import { AxiosError } from "axios";
-import useGoogleSignIn from "@/hooks/auth/useGoogleSignIn";
+import { useForm } from "react-hook-form";
+import { Credentials } from "../../api/register/types";
 
 function Login() {
   const { register, handleSubmit } = useForm<Credentials>();

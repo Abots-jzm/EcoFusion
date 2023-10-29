@@ -1,9 +1,10 @@
+import { Credentials } from "@/app/api/register/types";
 import prisma from "@/libs/prismadb";
-import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const body: Credentials = await req.json();
   const { email, password } = body;
 
   if (!email || !password)

@@ -1,4 +1,4 @@
-import Provider from "@/context/Providers";
+import Providers from "@/context/Providers";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={quicksand.className}>
-        <Provider>{children}</Provider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

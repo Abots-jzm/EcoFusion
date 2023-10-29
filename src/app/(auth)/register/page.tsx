@@ -1,11 +1,10 @@
 "use client";
 
-import AuthForm from "@/components/AuthForm";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { Credentials } from "../types";
+import AuthForm from "@/components/auth/AuthForm";
 import useRegister from "@/hooks/auth/useRegister";
 import { AxiosError } from "axios";
+import { useForm } from "react-hook-form";
+import { Credentials } from "../../api/register/types";
 
 function Register() {
   const { register, handleSubmit } = useForm<Credentials>();
