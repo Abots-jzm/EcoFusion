@@ -3,6 +3,7 @@ import { UpdateLastSelectedPayload } from "./types";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authoptions } from "../../auth/[...nextauth]/options";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function PATCH(req: Request) {
   const session = await getServerSession(authoptions);

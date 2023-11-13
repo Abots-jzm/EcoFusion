@@ -14,14 +14,15 @@ type Props = {
 function InitialRouteProvider({ children, user }: Props) {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
-  const isInCorrectStore = pathname.startsWith(
-    "/dashboard/" + user.lastSelected,
-  );
-  if (user.lastSelected && !isInCorrectStore)
-    redirect("/dashboard/" + user.lastSelected);
 
   useEffect(() => {
     dispatch(userActions.login(user.id));
+
+    const isInCorrectStore = pathname.startsWith(
+      "/dashboard/" + user.lastSelected,
+    );
+    if (user.lastSelected && !isInCorrectStore)
+      redirect("/dashboard/" + user.lastSelected);
   }, [user]);
   return <>{children}</>;
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { CreateStorePayload } from "@/app/api/store/types";
+import { CreateStorePayload } from "@/app/api/stores/types";
 import useCreateStore from "@/hooks/store/useCreateStore";
 import { useAppSelector } from "@/store/hooks";
 import { Dialog, Transition } from "@headlessui/react";

@@ -1,4 +1,4 @@
-import { CreateStorePayload } from "@/app/api/store/types";
+import { CreateStorePayload } from "@/app/api/stores/types";
 import prisma from "@/libs/prismadb";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";

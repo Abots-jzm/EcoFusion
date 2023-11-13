@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 
 type Props = {
   children: React.ReactNode;
-  parallel: React.ReactNode;
 };
 
 async function DashboardLayout({ children }: Props) {
