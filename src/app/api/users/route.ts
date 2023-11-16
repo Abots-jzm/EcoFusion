@@ -1,7 +1,7 @@
-import { Credentials } from "@/app/api/register/types";
 import prisma from "@/libs/prismadb";
 import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
+import { Credentials } from "./types";
 
 export async function POST(req: Request) {
   const body: Credentials = await req.json();

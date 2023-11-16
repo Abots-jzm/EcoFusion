@@ -18,7 +18,7 @@ type Props = {
 
 function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
   const { createStore, isCreating, createStoreError } = useCreateStore();
-  const userId = useAppSelector((state) => state.user.userId);
+  const userId = useAppSelector((state) => state.user.user?.id);
   const { register, handleSubmit } = useForm<{ name: string }>();
   const error = createStoreError as AxiosError;
 

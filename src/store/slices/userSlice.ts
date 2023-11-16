@@ -1,23 +1,26 @@
+import { User as PrismaUserType } from "@prisma/client";
 import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
 
+export type User = Omit<PrismaUserType, "hashedPassword">;
+
 type InitialState = {
-  userId: string | null;
+  user: User | null;
 };
 
 const initialState: InitialState = {
-  userId: null,
+  user: null,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    login(state, action: PayloadAction<string>) {
-      state.userId = action.payload;
+    login(state, action: PayloadAction<User>) {
+      state.user = action.payload;
     },
     logout(state) {
-      state.userId = null;
+      state.user = null;
     },
   },
 });

@@ -7,7 +7,7 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } },
 ) {
-  const serverSession = getServerSession(authoptions);
+  const serverSession = await getServerSession(authoptions);
   if (!serverSession)
     return new NextResponse("You are not authorized to make this request", {
       status: 401,

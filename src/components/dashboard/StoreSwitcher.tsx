@@ -19,7 +19,7 @@ type Props = {
 };
 
 function StoreSwitcher({ storeId }: Props) {
-  const userId = useAppSelector((state) => state.user.userId);
+  const userId = useAppSelector((state) => state.user.user?.id);
   const { userStores, isGettingStores } = useGetUserStores(userId);
   const { updateLastSelected } = useUpdateLastSelected();
   const pathname = usePathname();

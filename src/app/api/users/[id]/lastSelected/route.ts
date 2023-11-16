@@ -1,24 +1,29 @@
 import prisma from "@/libs/prismadb";
-import { UpdateLastSelectedPayload } from "./types";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authoptions } from "../../auth/[...nextauth]/options";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { authoptions } from "@/app/api/auth/[...nextauth]/options";
+import { UpdateLastSelectedPayload } from "./types";
 
-export async function PATCH(req: Request) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string } },
+) {
   const session = await getServerSession(authoptions);
 
   if (!session)
     return new NextResponse("Unauthorized request", { status: 401 });
 
-  const { storeId, userId } = (await req.json()) as UpdateLastSelectedPayload;
+  const { storeId } = (await req.json()) as Omit<
+    UpdateLastSelectedPayload,
+    "userId"
+  >;
 
-  if (!storeId || !userId)
-    return new NextResponse("Invalid user Id or store Id", { status: 400 });
+  if (!storeId)
+    return new NextResponse("Store Id is required", { status: 400 });
 
   const exist = await prisma.store.findFirst({
     where: {
-      AND: [{ id: storeId }, { ownerId: userId }],
+      AND: [{ id: storeId }, { ownerId: params.id }],
     },
   });
 
@@ -28,7 +33,7 @@ export async function PATCH(req: Request) {
     });
 
   const updatedUser = await prisma.user.update({
-    where: { id: userId },
+    where: { id: params.id },
     data: { lastSelected: storeId },
   });
 

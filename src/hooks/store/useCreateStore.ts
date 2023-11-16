@@ -1,15 +1,18 @@
-import { Store, User } from "@prisma/client";
+import { Store } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { CreateStorePayload } from "../../app/api/stores/types";
+import { User } from "@/store/slices/userSlice";
 
 async function createStore(payload: CreateStorePayload) {
   const newStore = await axios.post<Store>("/api/stores", payload);
-  const user = await axios.patch<User>("/api/user/lastSelected", {
-    storeId: newStore.data.id,
-    userId: newStore.data.ownerId,
-  });
+  const user = await axios.patch<User>(
+    `/api/users/${payload.ownerId}/lastSelected`,
+    {
+      storeId: newStore.data.id,
+    },
+  );
   return user;
 }
 

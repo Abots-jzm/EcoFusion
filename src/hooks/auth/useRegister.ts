@@ -1,11 +1,11 @@
-import { Credentials } from "@/app/api/register/types";
+import { Credentials } from "@/app/api/users/types";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 async function register(credentials: Credentials) {
-  const registerResponse = await axios.post("/api/register", credentials, {
+  const registerResponse = await axios.post("/api/users", credentials, {
     validateStatus: () => true,
   });
   if (registerResponse.status === 400)

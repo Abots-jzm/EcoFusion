@@ -5,15 +5,18 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { email: string } },
+  { params }: { params: { id: string } },
 ) {
-  const serverSession = getServerSession(authoptions);
+  const serverSession = await getServerSession(authoptions);
+  console.log(serverSession);
+
   if (!serverSession)
     return new NextResponse("You are not authorized to make this request", {
       status: 401,
     });
 
-  const user = await prisma.user.findUnique({ where: { email: params.email } });
+  console.log("yooooo");
+  const user = await prisma.user.findFirst({ where: { id: params.id } });
 
   if (!user)
     return new NextResponse("User could not be found.", { status: 404 });

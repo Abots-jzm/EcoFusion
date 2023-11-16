@@ -5,8 +5,9 @@ import { authoptions } from "../api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { BASE_URL } from "@/libs/request";
-import { User } from "@prisma/client";
 import InitialRouteProvider from "@/components/dashboard/InitialRouteProvider";
+import { User } from "@/store/slices/userSlice";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "EcoFusion | Dashboard",
@@ -18,9 +19,17 @@ type Props = {
 
 async function DashboardLayout({ children }: Props) {
   const serverSession = await getServerSession(authoptions);
+  if (!serverSession?.user) {
+    signOut();
+    redirect("/login");
+  }
 
   const response = await fetch(
-    `${BASE_URL}/api/user/byEmail/${serverSession?.user?.email}`,
+    `${BASE_URL}/api/users/${serverSession.user.id}`,
+    {
+      method: "GET",
+      headers: headers(),
+    },
   );
   if (!response.ok) {
     signOut();

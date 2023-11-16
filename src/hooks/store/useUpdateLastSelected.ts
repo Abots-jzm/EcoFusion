@@ -1,4 +1,4 @@
-import { UpdateLastSelectedPayload } from "@/app/api/user/lastSelected/types";
+import { UpdateLastSelectedPayload } from "@/app/api/users/[id]/lastSelected/types";
 import { User } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -7,9 +7,8 @@ async function updateLastSelected({
   storeId,
   userId,
 }: UpdateLastSelectedPayload) {
-  const user = await axios.patch<User>("/api/user/lastSelected", {
+  const user = await axios.patch<User>(`/api/users/${userId}/lastSelected`, {
     storeId,
-    userId,
   });
   return user;
 }

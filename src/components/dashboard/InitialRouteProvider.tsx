@@ -1,8 +1,7 @@
 "use client";
 
 import { useAppDispatch } from "@/store/hooks";
-import { userActions } from "@/store/slices/userSlice";
-import { User } from "@prisma/client";
+import { User, userActions } from "@/store/slices/userSlice";
 import { redirect, usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -16,7 +15,8 @@ function InitialRouteProvider({ children, user }: Props) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(userActions.login(user.id));
+    const serializedUser = JSON.parse(JSON.stringify(user)) as User;
+    dispatch(userActions.login(serializedUser));
 
     const isInCorrectStore = pathname.startsWith(
       "/dashboard/" + user.lastSelected,
