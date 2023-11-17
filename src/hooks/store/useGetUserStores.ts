@@ -1,19 +1,19 @@
-import { Store } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+import useUserId from "../auth/useUserId";
+import { Store } from "@prisma/client";
 
-async function getUserStores(userId?: string) {
-  if (!userId) throw new AxiosError("Invalid Request. User Id is undefined");
-
-  const stores = await axios.get<Store[]>(`/api/users/${userId}/stores`);
-  return stores;
+async function getUserStores(userId: string) {
+  const axiosStore = await axios.get<Store[]>(`/api/users/${userId}/stores`);
+  return axiosStore.data;
 }
 
-function useGetUserStores(userId?: string) {
+function useGetUserStores(initialData?: Store[]) {
+  const userId = useUserId();
   const { data, isLoading, error } = useQuery({
     queryKey: [userId, "stores"],
     queryFn: () => getUserStores(userId),
-    select: (data) => data.data,
+    initialData,
   });
 
   return {

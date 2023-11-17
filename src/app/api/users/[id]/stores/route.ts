@@ -15,10 +15,5 @@ export async function GET(
 
   const stores = await prisma.store.findMany({ where: { ownerId: params.id } });
 
-  if (stores.length === 0)
-    return new NextResponse("Stores for this user couldn't be found", {
-      status: 404,
-    });
-
   return NextResponse.json(stores);
 }

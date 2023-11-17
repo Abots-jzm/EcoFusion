@@ -1,9 +1,10 @@
 import { Store } from "@prisma/client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { CreateStorePayload } from "../../app/api/stores/types";
-import { User } from "@/store/slices/userSlice";
+import { User } from "../auth/types";
+import useUserId from "../auth/useUserId";
 
 async function createStore(payload: CreateStorePayload) {
   const newStore = await axios.post<Store>("/api/stores", payload);
@@ -13,15 +14,20 @@ async function createStore(payload: CreateStorePayload) {
       storeId: newStore.data.id,
     },
   );
-  return user;
+  return user.data;
 }
 
 function useCreateStore() {
+  const userId = useUserId();
+  const queryClient = useQueryClient();
   const router = useRouter();
 
   const { mutate, isLoading, error } = useMutation({
     mutationFn: createStore,
-    onSuccess: (user) => router.push(`/dashboard/${user.data.lastSelected}`),
+    onSuccess(user) {
+      queryClient.invalidateQueries([userId, "store"]);
+      router.push(`/dashboard/${user.lastSelected}`);
+    },
   });
 
   return {

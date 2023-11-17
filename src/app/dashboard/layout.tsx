@@ -6,8 +6,9 @@ import { redirect } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { BASE_URL } from "@/libs/request";
 import InitialRouteProvider from "@/components/dashboard/InitialRouteProvider";
-import { User } from "@/store/slices/userSlice";
 import { headers } from "next/headers";
+import { User } from "@/hooks/auth/types";
+import { Store } from "@prisma/client";
 
 export const metadata: Metadata = {
   title: "EcoFusion | Dashboard",
@@ -24,21 +25,34 @@ async function DashboardLayout({ children }: Props) {
     redirect("/login");
   }
 
-  const response = await fetch(
-    `${BASE_URL}/api/users/${serverSession.user.id}`,
+  const userPromise = fetch(`${BASE_URL}/api/users/${serverSession.user.id}`, {
+    method: "GET",
+    headers: headers(),
+  });
+  const storePromise = fetch(
+    `${BASE_URL}/api/users/${serverSession.user.id}/stores`,
     {
       method: "GET",
       headers: headers(),
     },
   );
-  if (!response.ok) {
-    signOut();
-    redirect("/login");
-  }
 
-  const user: User = await response.json();
+  const responses = await Promise.all([userPromise, storePromise]);
+  const [user, stores] = (await Promise.all(
+    responses.map((response) => {
+      if (!response.ok) {
+        signOut();
+        redirect("/login");
+      }
+      return response.json();
+    }),
+  )) as [User, Store[]];
 
-  return <InitialRouteProvider user={user}>{children}</InitialRouteProvider>;
+  return (
+    <InitialRouteProvider user={user} stores={stores}>
+      {children}
+    </InitialRouteProvider>
+  );
 }
 
 export default DashboardLayout;

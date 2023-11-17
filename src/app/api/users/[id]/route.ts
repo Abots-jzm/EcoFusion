@@ -8,14 +8,12 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   const serverSession = await getServerSession(authoptions);
-  console.log(serverSession);
 
   if (!serverSession)
     return new NextResponse("You are not authorized to make this request", {
       status: 401,
     });
 
-  console.log("yooooo");
   const user = await prisma.user.findFirst({ where: { id: params.id } });
 
   if (!user)

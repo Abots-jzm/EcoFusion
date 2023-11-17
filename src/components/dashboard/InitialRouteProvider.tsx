@@ -1,23 +1,24 @@
 "use client";
 
-import { useAppDispatch } from "@/store/hooks";
-import { User, userActions } from "@/store/slices/userSlice";
+import { User } from "@/hooks/auth/types";
+import useGetUser from "@/hooks/auth/useGetUser";
+import useGetUserStores from "@/hooks/store/useGetUserStores";
+import { Store } from "@prisma/client";
 import { redirect, usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 
 type Props = {
   children: React.ReactNode;
   user: User;
+  stores: Store[];
 };
 
-function InitialRouteProvider({ children, user }: Props) {
+function InitialRouteProvider({ children, user, stores }: Props) {
   const pathname = usePathname();
-  const dispatch = useAppDispatch();
+  useGetUser(user);
+  useGetUserStores(stores);
 
   useEffect(() => {
-    const serializedUser = JSON.parse(JSON.stringify(user)) as User;
-    dispatch(userActions.login(serializedUser));
-
     const isInCorrectStore = pathname.startsWith(
       "/dashboard/" + user.lastSelected,
     );

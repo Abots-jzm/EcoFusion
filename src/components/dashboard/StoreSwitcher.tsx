@@ -1,26 +1,25 @@
 "use client";
 
+import useUserId from "@/hooks/auth/useUserId";
 import useGetUserStores from "@/hooks/store/useGetUserStores";
-import { useAppSelector } from "@/store/hooks";
+import useUpdateLastSelected from "@/hooks/store/useUpdateLastSelected";
 import { Listbox, Transition } from "@headlessui/react";
 import { Store } from "@prisma/client";
 import clsx from "clsx";
-import React, { Fragment, useEffect, useState } from "react";
-import { HiOutlineSelector } from "react-icons/hi";
-import { MdAdd, MdCheck } from "react-icons/md";
-import { IoStorefront } from "react-icons/io5";
-import CreateStoreModal from "./CreateStoreModal";
 import { usePathname, useRouter } from "next/navigation";
-import useUpdateLastSelected from "@/hooks/store/useUpdateLastSelected";
-import { signOut } from "next-auth/react";
+import { Fragment, useEffect, useState } from "react";
+import { HiOutlineSelector } from "react-icons/hi";
+import { IoStorefront } from "react-icons/io5";
+import { MdAdd, MdCheck } from "react-icons/md";
+import CreateStoreModal from "./CreateStoreModal";
 
 type Props = {
   storeId: string;
 };
 
 function StoreSwitcher({ storeId }: Props) {
-  const userId = useAppSelector((state) => state.user.user?.id);
-  const { userStores, isGettingStores } = useGetUserStores(userId);
+  const userId = useUserId();
+  const { userStores, isGettingStores } = useGetUserStores();
   const { updateLastSelected } = useUpdateLastSelected();
   const pathname = usePathname();
   const router = useRouter();
@@ -37,11 +36,6 @@ function StoreSwitcher({ storeId }: Props) {
   }
 
   function handleStoreChange(newStore: Store) {
-    if (!userId) {
-      signOut();
-      return;
-    }
-
     updateLastSelected(
       { storeId: newStore.id, userId },
       {

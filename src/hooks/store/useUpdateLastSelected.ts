@@ -1,7 +1,8 @@
 import { UpdateLastSelectedPayload } from "@/app/api/users/[id]/lastSelected/types";
 import { User } from "@prisma/client";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import useUserId from "../auth/useUserId";
 
 async function updateLastSelected({
   storeId,
@@ -10,12 +11,16 @@ async function updateLastSelected({
   const user = await axios.patch<User>(`/api/users/${userId}/lastSelected`, {
     storeId,
   });
-  return user;
+  return user.data;
 }
 
 function useUpdateLastSelected() {
+  const userId = useUserId();
+  const queryClient = useQueryClient();
+
   const { mutate, isLoading, error } = useMutation({
     mutationFn: updateLastSelected,
+    onSuccess: () => queryClient.invalidateQueries([userId]),
   });
 
   return {

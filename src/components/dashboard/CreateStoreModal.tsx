@@ -1,11 +1,10 @@
 "use client";
 
 import { CreateStorePayload } from "@/app/api/stores/types";
+import useUserId from "@/hooks/auth/useUserId";
 import useCreateStore from "@/hooks/store/useCreateStore";
-import { useAppSelector } from "@/store/hooks";
 import { Dialog, Transition } from "@headlessui/react";
 import { AxiosError } from "axios";
-import { signOut } from "next-auth/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { MdClose, MdErrorOutline } from "react-icons/md";
@@ -17,16 +16,12 @@ type Props = {
 };
 
 function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
+  const userId = useUserId();
   const { createStore, isCreating, createStoreError } = useCreateStore();
-  const userId = useAppSelector((state) => state.user.user?.id);
   const { register, handleSubmit } = useForm<{ name: string }>();
   const error = createStoreError as AxiosError;
 
   function onFormSubmit({ name }: { name: string }) {
-    if (!userId) {
-      signOut();
-      return;
-    }
     const payload: CreateStorePayload = {
       name,
       ownerId: userId,
