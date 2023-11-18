@@ -20,7 +20,7 @@ type Props = {
 function StoreSwitcher({ storeId }: Props) {
   const userId = useUserId();
   const { userStores, isGettingStores } = useGetUserStores();
-  const { updateLastSelected } = useUpdateLastSelected();
+  const { updateLastSelected, isUpdating } = useUpdateLastSelected();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -42,7 +42,6 @@ function StoreSwitcher({ storeId }: Props) {
         onSuccess() {
           const newPath = pathname.replace(storeId, newStore.id);
           router.push(newPath);
-          setSelectedStore(newStore);
         },
       },
     );
@@ -50,8 +49,10 @@ function StoreSwitcher({ storeId }: Props) {
 
   useEffect(() => {
     if (userStores && userStores.length !== 0) {
-      const lastSelctedStore = userStores.find((store) => store.id === storeId);
-      setSelectedStore(lastSelctedStore || userStores[0]);
+      const lastSelectedStore = userStores.find(
+        (store) => store.id === storeId,
+      );
+      setSelectedStore(lastSelectedStore || userStores[0]);
     }
   }, [userStores]);
 
@@ -65,7 +66,14 @@ function StoreSwitcher({ storeId }: Props) {
               {isGettingStores ? "..." : selectedStore?.name}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-              <HiOutlineSelector aria-hidden="true" />
+              {isUpdating ? (
+                <div
+                  aria-hidden="true"
+                  className="h-2 w-2 animate-spin rounded-full border-l border-t border-black"
+                />
+              ) : (
+                <HiOutlineSelector aria-hidden="true" />
+              )}
             </span>
           </Listbox.Button>
           <Transition
