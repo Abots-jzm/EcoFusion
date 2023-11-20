@@ -77,7 +77,6 @@ function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
                 <div className="text-sm text-gray-600">
                   Add a new store to manage products and categories
                 </div>
-                <form onSubmit={handleSubmit(onFormSubmit)}>
                   <div className="flex flex-col gap-1 pt-5">
                     <label htmlFor="name" className="text-sm font-semibold">
                       Name
@@ -113,6 +112,7 @@ function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
                     <button
                       type="submit"
                       className="group flex items-center justify-center gap-4 rounded-lg border border-black bg-black px-3 py-2 text-sm font-semibold text-white transition-all hover:bg-white hover:text-black disabled:opacity-50"
+                      onClick={handleSubmit(onFormSubmit)}
                     >
                       <span>Continue</span>
                       {isCreating && (
@@ -120,7 +120,6 @@ function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
                       )}
                     </button>
                   </div>
-                </form>
               </Dialog.Panel>
             </Transition.Child>
           </div>

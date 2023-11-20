@@ -17,7 +17,7 @@ function DashboardDataLayout({ params, children }: Props) {
           <div className="ml-auto">user button</div>
         </div>
       </div>
-      {children}
+      <div className="m-auto max-w-[1440px] p-4">{children}</div>
     </>
   );
 }

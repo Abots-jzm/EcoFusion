@@ -36,6 +36,8 @@ function StoreSwitcher({ storeId }: Props) {
   }
 
   function handleStoreChange(newStore: Store) {
+    if (selectedStore?.id === newStore.id) return;
+
     updateLastSelected(
       { storeId: newStore.id, userId },
       {

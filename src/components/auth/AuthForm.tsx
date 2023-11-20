@@ -1,4 +1,4 @@
-import { Credentials } from "@/app/api/register/types";
+import { Credentials } from "@/app/api/users/types";
 import { AxiosError } from "axios";
 import Link from "next/link";
 import React from "react";

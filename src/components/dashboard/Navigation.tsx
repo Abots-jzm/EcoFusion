@@ -49,9 +49,9 @@ function Navigation({ storeId }: Props) {
       isActive: pathname === `/dashboard/${storeId}/orders`,
     },
     {
-      href: `/dashboard/${storeId}/settings`,
-      label: "Settings",
-      isActive: pathname === `/dashboard/${storeId}/settings`,
+      href: `/dashboard/${storeId}/edit`,
+      label: "Edit",
+      isActive: pathname === `/dashboard/${storeId}/edit`,
     },
   ];
 
