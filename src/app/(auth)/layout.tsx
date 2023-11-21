@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 function AuthLayout({ children }: Props) {
   return (
     <div className="mx-auto h-screen place-items-center pt-6 sm:grid sm:max-w-md sm:pt-0">
-      <div className="w-full p-8 pt-4 sm:rounded-lg sm:pt-8 sm:shadow-lg">
+      <div className="dark:border-darkAccent w-full p-8 pt-4 dark:rounded-2xl dark:border sm:rounded-lg sm:pt-8 sm:shadow-lg">
         <div className="text-xl font-bold">EcoFusion</div>
         {children}
       </div>

@@ -62,8 +62,10 @@ function Navigation({ storeId }: Props) {
           key={href}
           href={href}
           className={clsx(
-            "text-sm transition-colors hover:text-black",
-            isActive ? "font-semibold text-black" : "font-medium text-gray-400",
+            "text-sm transition-colors hover:text-black dark:hover:text-lightGray",
+            isActive
+              ? "font-semibold text-black dark:text-lightGray"
+              : "text-darkMutedText font-medium",
           )}
         >
           {label}

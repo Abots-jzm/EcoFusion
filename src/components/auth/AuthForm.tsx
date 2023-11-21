@@ -47,7 +47,7 @@ function AuthForm({
             {...register("email")}
             id="email"
             type="email"
-            className="w-full rounded-lg border border-gray-300 p-2 pl-10 placeholder:text-gray-400"
+            className="dark:border-darkAccent w-full rounded-lg border border-gray-300 p-2 pl-10 placeholder:text-gray-400 dark:bg-charcoal"
             placeholder="Email"
             required
           />
@@ -60,13 +60,13 @@ function AuthForm({
             {...register("password")}
             id="password"
             type="password"
-            className="w-full rounded-lg border border-gray-300 p-2 pl-10 placeholder:text-gray-400"
+            className="dark:border-darkAccent w-full rounded-lg border border-gray-300 p-2 pl-10 placeholder:text-gray-400 dark:bg-charcoal"
             placeholder="Password"
             required
           />
         </div>
         {error && (
-          <div className="relative flex items-center text-sm text-red-600">
+          <div className="relative flex items-center text-sm text-red-600 dark:text-red-400">
             <div className="absolute top-1 grid place-items-center">
               <MdErrorOutline />
             </div>
@@ -74,13 +74,13 @@ function AuthForm({
           </div>
         )}
         <button
-          className="group flex items-center justify-center gap-4 rounded-lg border border-black bg-black p-2 font-semibold text-white transition-all hover:bg-white hover:text-black disabled:opacity-50"
+          className="group flex items-center justify-center gap-4 rounded-lg border border-black bg-black p-2 font-semibold text-white transition-all hover:bg-white hover:text-black disabled:opacity-50 dark:bg-lightGray dark:text-charcoal dark:hover:border-lightGray dark:hover:bg-charcoal dark:hover:text-lightGray"
           disabled={isLoading}
           type="submit"
         >
           <span>{title}</span>
           {isLoading && (
-            <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-white group-hover:border-black" />
+            <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-white group-hover:border-black dark:border-charcoal dark:group-hover:border-lightGray" />
           )}
         </button>
       </form>
@@ -89,7 +89,7 @@ function AuthForm({
           <div className="py-5 text-center">or</div>
           <div className="flex flex-col gap-4 font-medium">
             <button
-              className="group relative flex items-center justify-center gap-4 rounded-lg border border-black bg-white p-2 text-black transition-all hover:bg-black hover:text-white"
+              className="group relative flex items-center justify-center gap-4 rounded-lg border border-black bg-white p-2 text-black transition-all hover:bg-black hover:text-white dark:border-lightGray dark:bg-charcoal dark:text-lightGray dark:hover:bg-lightGray dark:hover:text-charcoal"
               onClick={googleSignInOptions?.onGoogleSignIn}
             >
               <div className="absolute left-6">
@@ -97,7 +97,7 @@ function AuthForm({
               </div>
               <span>Sign in with Google</span>
               {googleSignInOptions?.isSigningInWithGoogle && (
-                <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-black group-hover:border-white" />
+                <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-black group-hover:border-white dark:border-lightGray dark:group-hover:border-charcoal" />
               )}
             </button>
           </div>
