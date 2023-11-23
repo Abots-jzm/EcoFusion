@@ -3,12 +3,12 @@ import { getServerSession } from "next-auth";
 import React from "react";
 import { authoptions } from "../api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
-import { signOut } from "next-auth/react";
 import { BASE_URL } from "@/libs/request";
 import InitialRouteProvider from "@/components/dashboard/InitialRouteProvider";
 import { headers } from "next/headers";
 import { User } from "@/hooks/auth/types";
 import { Store } from "@prisma/client";
+import prisma from "@/libs/prismadb";
 
 export const metadata: Metadata = {
   title: "EcoFusion | Dashboard",
@@ -21,32 +21,41 @@ type Props = {
 async function DashboardLayout({ children }: Props) {
   const serverSession = await getServerSession(authoptions);
   if (!serverSession?.user) {
-    signOut();
     redirect("/login");
   }
 
-  const userPromise = fetch(`${BASE_URL}/api/users/${serverSession.user.id}`, {
-    method: "GET",
-    // headers: headers(),
-  });
-  const storePromise = fetch(
-    `${BASE_URL}/api/users/${serverSession.user.id}/stores`,
-    {
-      method: "GET",
-      // headers: headers(),
-    },
-  );
+  // const userPromise = fetch(`${BASE_URL}/api/users/${serverSession.user.id}`, {
+  //   method: "GET",
+  //   headers: headers(),
+  // });
+  // const storePromise = fetch(
+  //   `${BASE_URL}/api/users/${serverSession.user.id}/stores`,
+  //   {
+  //     method: "GET",
+  //     headers: headers(),
+  //   },
+  // );
 
-  const responses = await Promise.all([userPromise, storePromise]);
-  const [user, stores] = (await Promise.all(
-    responses.map((response) => {
-      if (!response.ok) {
-        signOut();
-        redirect("/login");
-      }
-      return response.json();
-    }),
-  )) as [User, Store[]];
+  // const responses = await Promise.all([userPromise, storePromise]);
+  // const [user, stores] = (await Promise.all(
+  //   responses.map((response) => {
+  //     if (!response.ok) {
+  //       signOut();
+  //       redirect("/login");
+  //     }
+  //     return response.json();
+  //   }),
+  // )) as [User, Store[]];
+
+  const userWithPassword = await prisma.user.findFirst({
+    where: { id: serverSession.user.id },
+  });
+  if (!userWithPassword) redirect("/login");
+  const { hashedPassword, ...user } = userWithPassword;
+
+  const stores = await prisma.store.findMany({
+    where: { ownerId: serverSession.user.id },
+  });
 
   return (
     <InitialRouteProvider user={user} stores={stores}>
