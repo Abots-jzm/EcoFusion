@@ -3,11 +3,8 @@ import { getServerSession } from "next-auth";
 import React from "react";
 import { authoptions } from "../api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
-import { BASE_URL } from "@/libs/request";
 import InitialRouteProvider from "@/components/dashboard/InitialRouteProvider";
-import { headers } from "next/headers";
-import { User } from "@/hooks/auth/types";
-import { Store } from "@prisma/client";
+import { Store, User } from "@prisma/client";
 import prisma from "@/libs/prismadb";
 
 export const metadata: Metadata = {
@@ -24,38 +21,22 @@ async function DashboardLayout({ children }: Props) {
     redirect("/login");
   }
 
-  // const userPromise = fetch(`${BASE_URL}/api/users/${serverSession.user.id}`, {
-  //   method: "GET",
-  //   headers: headers(),
-  // });
-  // const storePromise = fetch(
-  //   `${BASE_URL}/api/users/${serverSession.user.id}/stores`,
-  //   {
-  //     method: "GET",
-  //     headers: headers(),
-  //   },
-  // );
-
-  // const responses = await Promise.all([userPromise, storePromise]);
-  // const [user, stores] = (await Promise.all(
-  //   responses.map((response) => {
-  //     if (!response.ok) {
-  //       signOut();
-  //       redirect("/login");
-  //     }
-  //     return response.json();
-  //   }),
-  // )) as [User, Store[]];
-
-  const userWithPassword = await prisma.user.findFirst({
-    where: { id: serverSession.user.id },
+  const userId = serverSession.user.id;
+  const userPromise = prisma.user.findFirst({
+    where: { id: userId },
   });
+  const storesPromise = prisma.store.findMany({
+    where: { ownerId: userId },
+  });
+
+  const [userWithPassword, stores] = (await Promise.all([
+    userPromise,
+    storesPromise,
+  ])) as [User, Store[]];
+
   if (!userWithPassword) redirect("/login");
-  const { hashedPassword, ...user } = userWithPassword;
 
-  const stores = await prisma.store.findMany({
-    where: { ownerId: serverSession.user.id },
-  });
+  const { hashedPassword, ...user } = userWithPassword;
 
   return (
     <InitialRouteProvider user={user} stores={stores}>
