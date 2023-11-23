@@ -26,7 +26,7 @@ function ThemeSwitcher({ initialTheme }: Props) {
 
   return (
     <div
-      className="grid cursor-pointer place-items-center text-2xl hover:opacity-50"
+      className="grid cursor-pointer place-items-center text-2xl transition-opacity hover:opacity-50"
       onClick={toggleTheme}
     >
       {theme === "light" && <MdLightMode />}

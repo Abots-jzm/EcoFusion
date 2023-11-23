@@ -1,4 +1,5 @@
-import Navigation from "@/components/dashboard/Navigation";
+import DesktopNavigation from "@/components/dashboard/navigation/DesktopNavigation";
+import MobileNavigation from "@/components/dashboard/navigation/MobileNavigation";
 import StoreSwitcher from "@/components/dashboard/StoreSwitcher";
 import ThemeSwitcher from "@/components/util/ThemeSwitcher";
 import { cookies } from "next/headers";
@@ -14,13 +15,14 @@ function DashboardDataLayout({ params, children }: Props) {
 
   return (
     <>
-      <div className="dark:border-b-darkAccent border-b">
-        <div className="flex h-16 items-center gap-6 px-4">
+      <div className="border-b dark:border-b-darkAccent">
+        <div className="flex h-16 items-center justify-between gap-6 px-4">
           <StoreSwitcher storeId={params.storeId} />
-          <Navigation storeId={params.storeId} />
-          <div className="ml-auto flex items-center gap-4">
+          <DesktopNavigation storeId={params.storeId} />
+          <div className="flex items-center gap-4">
             <ThemeSwitcher initialTheme={theme} />
-            <div>user button</div>
+            <div className="hidden md:block">user button</div>
+            <MobileNavigation storeId={params.storeId} />
           </div>
         </div>
       </div>

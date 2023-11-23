@@ -21,10 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={theme === "dark" ? "dark" : ""}>
       <body
-        className={
-          quicksand.className +
-          " transition-colors dark:bg-charcoal dark:text-lightGray"
-        }
+        className={`${quicksand.className} transition-colors dark:bg-charcoal dark:text-lightGray`}
       >
         <Providers>{children}</Providers>
       </body>
