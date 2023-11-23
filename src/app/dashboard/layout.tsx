@@ -27,13 +27,13 @@ async function DashboardLayout({ children }: Props) {
 
   const userPromise = fetch(`${BASE_URL}/api/users/${serverSession.user.id}`, {
     method: "GET",
-    headers: headers(),
+    // headers: headers(),
   });
   const storePromise = fetch(
     `${BASE_URL}/api/users/${serverSession.user.id}/stores`,
     {
       method: "GET",
-      headers: headers(),
+      // headers: headers(),
     },
   );
 
