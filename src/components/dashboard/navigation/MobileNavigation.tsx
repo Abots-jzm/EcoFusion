@@ -1,5 +1,6 @@
 "use client";
 
+import SignoutBtn from "@/components/auth/SignoutBtn";
 import useGetNavRoutes from "@/hooks/data/useGetNavRoutes";
 import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
@@ -90,7 +91,7 @@ function MobileNavigation({ storeId }: Props) {
                       {label}
                     </Link>
                   ))}
-                  <div className="mt-auto">User Button</div>
+                  <SignoutBtn />
                 </div>
               </Dialog.Panel>
             </Transition.Child>

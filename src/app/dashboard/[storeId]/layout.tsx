@@ -1,3 +1,4 @@
+import SignoutBtn from "@/components/auth/SignoutBtn";
 import DesktopNavigation from "@/components/dashboard/navigation/DesktopNavigation";
 import MobileNavigation from "@/components/dashboard/navigation/MobileNavigation";
 import StoreSwitcher from "@/components/dashboard/StoreSwitcher";
@@ -21,7 +22,9 @@ function DashboardDataLayout({ params, children }: Props) {
           <DesktopNavigation storeId={params.storeId} />
           <div className="flex items-center gap-4">
             <ThemeSwitcher initialTheme={theme} />
-            <div className="hidden md:block">user button</div>
+            <div className="hidden md:grid md:place-items-center">
+              <SignoutBtn />
+            </div>
             <MobileNavigation storeId={params.storeId} />
           </div>
         </div>
