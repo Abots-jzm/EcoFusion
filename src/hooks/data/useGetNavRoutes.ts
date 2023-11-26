@@ -8,7 +8,7 @@ function useGetNavRoutes(storeId: string, pathname: string) {
     {
       href: `/dashboard/${storeId}/billboards`,
       label: "Billboards",
-      isActive: pathname === `/dashboard/${storeId}/billboards`,
+      isActive: pathname.startsWith(`/dashboard/${storeId}/billboards`),
     },
     {
       href: `/dashboard/${storeId}/categories`,

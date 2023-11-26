@@ -31,7 +31,7 @@ function Settings() {
   return (
     <>
       <div className="text-3xl font-bold">Edit</div>
-      <div className="dark:text-darkMutedText text-gray-600">
+      <div className="text-gray-600 dark:text-darkMutedText">
         Edit store detials
       </div>
       <form
@@ -45,7 +45,7 @@ function Settings() {
           type="text"
           id="name"
           {...register("name")}
-          className="dark:border-darkAccent w-96 rounded-lg border border-gray-300 p-2 focus:outline-none dark:bg-charcoal"
+          className="w-full rounded-lg border border-gray-300 p-2 focus:outline-none dark:border-darkAccent dark:bg-charcoal sm:w-96"
           required
         />
         <button
