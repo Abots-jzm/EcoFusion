@@ -58,10 +58,11 @@ function BillboardForm({ buttonTxt, initialData }: Props) {
           )}
           {!!currentImage && (
             <>
-              <img
-                src={getCurrentImage()}
+              <Image
+                src={currentImage}
                 alt="billboard background preview"
-                className="h-full w-full object-cover object-center"
+                className="object-cover object-center"
+                fill
               />
               <DynamicTextColorComponent
                 imageUrl={currentImage}
@@ -106,7 +107,7 @@ function BillboardForm({ buttonTxt, initialData }: Props) {
                       leaveFrom="opacity-100"
                       leaveTo="opacity-0"
                     >
-                      <Listbox.Options className="absolute z-10 mt-1 w-72 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-darkAccent dark:bg-charcoal sm:w-96 sm:text-sm">
+                      <Listbox.Options className="absolute bottom-10 z-10 mt-1 w-72 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-darkAccent dark:bg-charcoal sm:w-96 sm:text-sm lg:bottom-auto">
                         <div className="grid grid-cols-3 gap-5 p-4 sm:grid-cols-4">
                           {BILLBOARD_PRESET_URLS.map((url, index) => (
                             <Listbox.Option
