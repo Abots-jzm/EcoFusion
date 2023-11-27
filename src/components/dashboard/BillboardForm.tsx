@@ -1,11 +1,18 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { BILLBOARD_PRESET_URLS } from "@/libs/data";
+import { Listbox, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { IoCloudUploadOutline } from "react-icons/io5";
 import { MdErrorOutline } from "react-icons/md";
 import { RiImageAddFill } from "react-icons/ri";
+import Image from "next/image";
+import DynamicTextColorComponent from "../util/DynamicTextColor";
 
 type FormData = {
-  backgroundImage?: FileList;
+  presetUrl?: string;
+  newImage?: FileList;
   label: string;
 };
 
@@ -14,12 +21,26 @@ type Props = {
   initialData?: any; //TODO
 };
 
-function BillboardForm({ buttonTxt }: Props) {
-  const { register, handleSubmit, watch, formState } = useForm<FormData>();
+function BillboardForm({ buttonTxt, initialData }: Props) {
+  const { register, handleSubmit, watch, formState, control } =
+    useForm<FormData>();
   const {
-    errors: { backgroundImage: bgError },
+    errors: { newImage, presetUrl, label: labelError },
   } = formState;
-  const currentImage = watch("backgroundImage")?.[0];
+  const bgError = newImage || presetUrl;
+
+  const [presetPriority, setPresetPriority] = useState<
+    "url" | "upload" | undefined
+  >(initialData ? "url" : undefined);
+
+  function getCurrentImage() {
+    const imageToUpload = watch("newImage")?.[0];
+    if (presetPriority === "upload" && imageToUpload)
+      return URL.createObjectURL(imageToUpload);
+    if (presetPriority === "url" && watch("presetUrl"))
+      return watch("presetUrl");
+  }
+  const currentImage = getCurrentImage();
 
   function onFormSubmit(data: FormData) {
     console.log(data);
@@ -29,18 +50,26 @@ function BillboardForm({ buttonTxt }: Props) {
     <div className="flex flex-col justify-between gap-8 lg:flex-row">
       <div className="flex-1">
         <div className="pb-3 font-semibold">Preview</div>
-        <div className="h-60 w-full overflow-hidden rounded bg-gray-100 dark:bg-[#2e2e2e]">
+        <div className="relative h-60 w-full overflow-hidden rounded bg-gray-100 dark:bg-[#2e2e2e]">
           {!currentImage && (
             <div className="grid h-full w-full place-items-center">
               Upload an image to get started
             </div>
           )}
-          {currentImage && (
-            <img
-              src={URL.createObjectURL(currentImage)}
-              alt="uploaded image"
-              className="h-full w-full object-cover object-center"
-            />
+          {!!currentImage && (
+            <>
+              <img
+                src={getCurrentImage()}
+                alt="billboard background preview"
+                className="h-full w-full object-cover object-center"
+              />
+              <DynamicTextColorComponent
+                imageUrl={currentImage}
+                className="absolute inset-0 z-10 grid place-items-center px-16 text-center text-4xl font-bold"
+              >
+                {watch("label")}
+              </DynamicTextColorComponent>
+            </>
           )}
         </div>
       </div>
@@ -49,21 +78,98 @@ function BillboardForm({ buttonTxt }: Props) {
           <div className="hidden font-semibold lg:block">Customize</div>
           <div className="flex flex-col items-start gap-2">
             <div className="text-sm font-semibold">Background image</div>
-            <label
-              htmlFor="image"
-              className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-black px-2 py-1.5 text-sm font-medium transition-all hover:bg-black hover:text-white dark:border-lightGray dark:hover:bg-lightGray dark:hover:text-charcoal"
-            >
-              <RiImageAddFill />
-              {!currentImage ? "Upload" : "Change"} image
-            </label>
-            <input
-              type="file"
-              id="image"
-              accept="image/*"
-              className="hidden"
-              {...register("backgroundImage", {
-                required: "A background image is required",
-              })}
+            <Controller
+              name="presetUrl"
+              control={control}
+              rules={{
+                validate(data) {
+                  if (!data && !watch("newImage")?.[0])
+                    return "A background image is required";
+                },
+              }}
+              render={({ field }) => (
+                <Listbox
+                  value={field.value}
+                  onChange={(newValue) => {
+                    setPresetPriority("url");
+                    field.onChange(newValue);
+                  }}
+                >
+                  <div className="relative">
+                    <Listbox.Button className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-black px-2 py-1.5 text-sm font-medium transition-all hover:bg-black hover:text-white dark:border-lightGray dark:hover:bg-lightGray dark:hover:text-charcoal">
+                      <RiImageAddFill />
+                      {watch("presetUrl") ? "Change" : "Choose"} image
+                    </Listbox.Button>
+                    <Transition
+                      as={Fragment}
+                      leave="transition ease-in duration-100"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
+                      <Listbox.Options className="absolute z-10 mt-1 w-72 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none dark:border dark:border-darkAccent dark:bg-charcoal sm:w-96 sm:text-sm">
+                        <div className="grid grid-cols-3 gap-5 p-4 sm:grid-cols-4">
+                          {BILLBOARD_PRESET_URLS.map((url, index) => (
+                            <Listbox.Option
+                              value={url}
+                              key={index}
+                              className={({ selected }) =>
+                                `h-10 w-20 cursor-pointer overflow-hidden rounded-lg hover:ring-2 hover:ring-blue-400 ${
+                                  selected ? "ring-4 hover:ring-blue-400" : ""
+                                }`
+                              }
+                            >
+                              <Image
+                                src={url}
+                                alt={`preset ${index + 1}`}
+                                className="h-full w-full object-cover object-center"
+                                height={40}
+                                width={80}
+                                priority
+                              />
+                            </Listbox.Option>
+                          ))}
+                          <div className="sm:col-span-4 sm:border-t sm:border-t-gray-200 sm:pt-4 sm:dark:border-t-darkAccent">
+                            <label
+                              htmlFor="image"
+                              className="flex h-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-black px-2 py-1.5 text-sm font-medium transition-all hover:bg-black hover:text-white dark:border-lightGray dark:hover:bg-lightGray dark:hover:text-charcoal"
+                            >
+                              <IoCloudUploadOutline />
+                              <div className="hidden sm:block">
+                                Upload image
+                              </div>
+                            </label>
+                            <Controller
+                              name="newImage"
+                              control={control}
+                              rules={{
+                                validate(data) {
+                                  if (!data?.[0] && !watch("presetUrl"))
+                                    return "A background image is required";
+                                },
+                              }}
+                              render={({
+                                field: { onChange, value, ...field },
+                              }) => (
+                                <input
+                                  {...field}
+                                  type="file"
+                                  id="image"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    setPresetPriority("upload");
+                                    onChange(e.target.files);
+                                  }}
+                                />
+                              )}
+                            />
+                          </div>
+                        </div>
+                      </Listbox.Options>
+                    </Transition>
+                  </div>
+                </Listbox>
+              )}
             />
             {bgError && (
               <div className="relative flex items-center text-sm text-red-600 dark:text-red-400">
@@ -79,8 +185,21 @@ function BillboardForm({ buttonTxt }: Props) {
             <input
               type="text"
               className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none dark:border-darkAccent dark:bg-charcoal sm:w-96"
-              {...register("label")}
+              {...register("label", {
+                maxLength: {
+                  value: 35,
+                  message: "Label cannot be more than 35 characters long",
+                },
+              })}
             />
+            {labelError && (
+              <div className="relative flex items-center text-sm text-red-600 dark:text-red-400">
+                <div className="absolute top-1 grid place-items-center">
+                  <MdErrorOutline />
+                </div>
+                <span className="ml-4">{labelError.message}</span>
+              </div>
+            )}
           </div>
           <button
             className="mt-5 flex items-center gap-2 rounded-lg border border-black bg-black px-3 py-2 font-medium text-white transition-all hover:bg-white hover:text-black dark:border-lightGray dark:bg-lightGray dark:text-charcoal dark:hover:bg-charcoal dark:hover:text-lightGray lg:mt-auto"
