@@ -1,6 +1,6 @@
 "use client";
 
-import { BILLBOARD_PRESET_URLS } from "@/libs/data";
+import { BILLBOARD_PRESET_URLS, getPresetBlur } from "@/libs/data";
 import { Listbox, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -59,10 +59,13 @@ function BillboardForm({ buttonTxt, initialData }: Props) {
           {!!currentImage && (
             <>
               <Image
+                key={currentImage}
                 src={currentImage}
                 alt="billboard background preview"
-                className="object-cover object-center"
+                className="object-cover object-center transition-all"
                 fill
+                placeholder="blur"
+                blurDataURL={getPresetBlur(currentImage)}
               />
               <DynamicTextColorComponent
                 imageUrl={currentImage}
