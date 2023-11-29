@@ -1,7 +1,11 @@
 import BillboardForm from "@/components/dashboard/BillboardForm";
 import React from "react";
 
-function NewBillboard() {
+type Props = {
+  params: { storeId: string };
+};
+
+function NewBillboard({ params }: Props) {
   return (
     <>
       <div className="mb-6 border-b pb-3 dark:border-b-darkAccent">
@@ -10,7 +14,7 @@ function NewBillboard() {
           Add a new billboard
         </div>
       </div>
-      <BillboardForm buttonTxt="Create" />
+      <BillboardForm buttonTxt="Create" storeId={params.storeId} />
     </>
   );
 }

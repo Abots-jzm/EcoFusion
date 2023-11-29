@@ -20,7 +20,9 @@ const PRESET_URL_BLURS = [
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAADCAIAAAA7ljmRAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMElEQVR4nGOo9cg2YtBz9i6aMnE9w5am+boMyolB5ctn72b4//x7UXBBqFPGqZ0XASLgERaIdaueAAAAAElFTkSuQmCC",
 ] as const;
 
-export function getPresetBlur(src: string): string {
+export function getPresetBlur(src: string | undefined): string | undefined {
+  if (!src) return;
+
   const index = BILLBOARD_PRESET_URLS.findIndex((url) => url === src);
-  return PRESET_URL_BLURS[index];
+  if (index >= 0) return PRESET_URL_BLURS[index];
 }

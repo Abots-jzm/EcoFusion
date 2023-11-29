@@ -43,10 +43,28 @@ model Account {
 }
 
 model Store {
-  id      String @id @default(cuid())
-  name    String
-  ownerId String
-  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  id         String      @id @default(cuid())
+  name       String      @unique
+  ownerId    String
+  owner      User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  billboards Billboard[]
+  categories Category[]
+}
 
-  @@unique([ownerId, name])
+model Billboard {
+  id        String     @id @default(cuid())
+  storeId   String
+  Store     Store      @relation(fields: [storeId], references: [id])
+  imageUrl  String
+  label     String?
+  Category  Category[]
+  updatedAt DateTime   @updatedAt
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  storeId     String
+  Store       Store      @relation(fields: [storeId], references: [id])
+  billboard   Billboard? @relation(fields: [billboardId], references: [id])
+  billboardId String?
 }

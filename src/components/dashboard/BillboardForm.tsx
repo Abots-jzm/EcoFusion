@@ -9,6 +9,8 @@ import { MdErrorOutline } from "react-icons/md";
 import { RiImageAddFill } from "react-icons/ri";
 import Image from "next/image";
 import DynamicTextColorComponent from "../util/DynamicTextColor";
+import useCreateBillboard from "@/hooks/billboards/useCreateBillboard";
+import useCreateBillboardUpload from "@/hooks/billboards/upload/generateReactHelpers";
 
 type FormData = {
   presetUrl?: string;
@@ -18,10 +20,11 @@ type FormData = {
 
 type Props = {
   buttonTxt: string;
+  storeId: string;
   initialData?: any; //TODO
 };
 
-function BillboardForm({ buttonTxt, initialData }: Props) {
+function BillboardForm({ buttonTxt, initialData, storeId }: Props) {
   const { register, handleSubmit, watch, formState, control } =
     useForm<FormData>();
   const {
@@ -41,9 +44,17 @@ function BillboardForm({ buttonTxt, initialData }: Props) {
       return watch("presetUrl");
   }
   const currentImage = getCurrentImage();
+  const currentBlurData = getPresetBlur(currentImage);
 
-  function onFormSubmit(data: FormData) {
-    console.log(data);
+  const { createBillboard, isCreating } = useCreateBillboard();
+  const { createBillboardUpload, isUploading } = useCreateBillboardUpload();
+  const showSpinner = isUploading || isCreating;
+
+  function onFormSubmit({ label, newImage, presetUrl }: FormData) {
+    if (presetPriority === "upload" && !!newImage?.[0])
+      createBillboardUpload([newImage[0]], { storeId, label });
+    if (presetPriority === "url" && !!presetUrl)
+      createBillboard({ label, storeId, imageUrl: presetUrl });
   }
 
   return (
@@ -59,13 +70,13 @@ function BillboardForm({ buttonTxt, initialData }: Props) {
           {!!currentImage && (
             <>
               <Image
-                key={currentImage}
+                key={presetPriority === "url" ? currentImage : undefined}
                 src={currentImage}
                 alt="billboard background preview"
                 className="object-cover object-center transition-all"
                 fill
-                placeholder="blur"
-                blurDataURL={getPresetBlur(currentImage)}
+                placeholder={!currentBlurData ? "empty" : "blur"}
+                blurDataURL={currentBlurData}
               />
               <DynamicTextColorComponent
                 imageUrl={currentImage}
@@ -185,7 +196,7 @@ function BillboardForm({ buttonTxt, initialData }: Props) {
             )}
           </div>
           <div className="flex w-full flex-col gap-2">
-            <div className="text-sm font-semibold">Label</div>
+            <div className="text-sm font-semibold">Label (optional)</div>
             <input
               type="text"
               className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none dark:border-darkAccent dark:bg-charcoal sm:w-96"
@@ -206,10 +217,14 @@ function BillboardForm({ buttonTxt, initialData }: Props) {
             )}
           </div>
           <button
-            className="mt-5 flex items-center gap-2 rounded-lg border border-black bg-black px-3 py-2 font-medium text-white transition-all hover:bg-white hover:text-black dark:border-lightGray dark:bg-lightGray dark:text-charcoal dark:hover:bg-charcoal dark:hover:text-lightGray lg:mt-auto"
+            className="mt-5 flex items-center gap-2 rounded-lg border border-black bg-black px-3 py-2 font-medium text-white transition-all hover:bg-white hover:text-black disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white dark:border-lightGray dark:bg-lightGray dark:text-charcoal dark:hover:bg-charcoal dark:hover:text-lightGray dark:disabled:hover:bg-lightGray dark:disabled:hover:text-charcoal lg:mt-auto"
             type="submit"
+            disabled={showSpinner}
           >
             {buttonTxt}
+            {showSpinner && (
+              <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-white group-hover:border-black dark:border-charcoal" />
+            )}
           </button>
         </div>
       </form>

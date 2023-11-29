@@ -55,7 +55,7 @@ function Settings() {
         >
           <span>Save Changes</span>
           {editingStore && (
-            <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-white group-hover:border-black" />
+            <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-white group-hover:border-black dark:border-charcoal" />
           )}
         </button>
         <button
