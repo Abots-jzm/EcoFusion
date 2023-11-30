@@ -1,12 +1,12 @@
-import { Credentials } from "@/app/api/users/types";
+import { type Credentials } from "@/trpc/shared";
 import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { TRPCClientError } from "@trpc/client";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 async function login(credentials: Credentials) {
   const res = await signIn("credentials", { ...credentials, redirect: false });
-  if (res?.error) throw new AxiosError(res.error);
+  if (res?.error) throw new TRPCClientError(res.error);
 
   return res;
 }
@@ -18,7 +18,7 @@ function useLogin() {
 
   const { mutate, isLoading, error } = useMutation({
     mutationFn: login,
-    onSuccess: () => router.replace(callbackUrl || "/dashboard"),
+    onSuccess: () => router.replace(callbackUrl ?? "/dashboard"),
   });
 
   return { login: mutate, isLoggingIn: isLoading, loginError: error };

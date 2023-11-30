@@ -1,8 +1,7 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { authoptions } from "../auth/[...nextauth]/options";
-import { getServerSession } from "next-auth";
 import { z } from "zod";
-import prisma from "@/libs/prismadb";
+import { db } from "@/server/db";
+import { getServerAuthSession } from "@/server/auth";
 
 const f = createUploadthing();
 
@@ -15,12 +14,12 @@ export const ourFileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB" } })
     .input(uploadInputParser)
     .middleware(async ({ input }) => {
-      const serverSession = await getServerSession(authoptions);
+      const serverSession = await getServerAuthSession();
       if (!serverSession) throw new Error("Unauthorized");
       return input;
     })
     .onUploadComplete(async ({ file, metadata }) => {
-      await prisma.billboard.create({
+      await db.billboard.create({
         data: {
           storeId: metadata.storeId,
           imageUrl: file.url,

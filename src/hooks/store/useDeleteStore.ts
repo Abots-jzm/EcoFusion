@@ -1,28 +1,14 @@
-import { DeleteStorePayload } from "@/app/api/stores/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import useUserId from "../auth/useUserId";
 import { useRouter } from "next/navigation";
-
-async function deleteStore(payload: DeleteStorePayload) {
-  const nextStoreId = await axios.delete<string | null>(
-    `/api/stores/${payload.storeId}/delete`,
-    {
-      data: payload,
-    },
-  );
-  return nextStoreId.data;
-}
+import { api } from "@/context/Providers";
 
 function useDeleteStore() {
-  const queryClient = useQueryClient();
-  const userId = useUserId();
   const router = useRouter();
+  const utils = api.useUtils();
 
-  const { mutate, isLoading, error } = useMutation({
-    mutationFn: deleteStore,
+  const { mutate, isLoading, error } = api.stores.delete.useMutation({
     onSuccess(nextStoreId) {
-      queryClient.invalidateQueries([userId, "stores"]);
+      void utils.users.getInitialData.invalidate();
+      void utils.users.getStores.invalidate();
       router.replace("/dashboard" + (nextStoreId ? `/${nextStoreId}` : ""));
     },
   });

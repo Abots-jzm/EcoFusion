@@ -1,32 +1,15 @@
-import { Store } from "@prisma/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import { CreateStorePayload } from "../../app/api/stores/types";
-import { User } from "../auth/types";
-import useUserId from "../auth/useUserId";
-
-async function createStore(payload: CreateStorePayload) {
-  const newStore = await axios.post<Store>("/api/stores", payload);
-  const user = await axios.patch<User>(
-    `/api/users/${payload.ownerId}/lastSelected`,
-    {
-      storeId: newStore.data.id,
-    },
-  );
-  return user.data;
-}
+import { api } from "@/context/Providers";
 
 function useCreateStore() {
-  const userId = useUserId();
-  const queryClient = useQueryClient();
   const router = useRouter();
+  const utils = api.useUtils();
 
-  const { mutate, isLoading, error } = useMutation({
-    mutationFn: createStore,
-    onSuccess(user) {
-      queryClient.invalidateQueries([userId, "store"]);
-      router.push(`/dashboard/${user.lastSelected}`);
+  const { mutate, isLoading, error } = api.stores.create.useMutation({
+    onSuccess(lastSelected) {
+      lastSelected && router.push(`/dashboard/${lastSelected}`);
+      void utils.users.getInitialData.invalidate();
+      void utils.users.getStores.invalidate();
     },
   });
 

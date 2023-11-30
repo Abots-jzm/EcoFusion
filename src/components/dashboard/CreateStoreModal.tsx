@@ -1,10 +1,7 @@
 "use client";
 
-import { CreateStorePayload } from "@/app/api/stores/types";
-import useUserId from "@/hooks/auth/useUserId";
 import useCreateStore from "@/hooks/store/useCreateStore";
 import { Dialog, Transition } from "@headlessui/react";
-import { AxiosError } from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { MdClose, MdErrorOutline } from "react-icons/md";
@@ -16,17 +13,11 @@ type Props = {
 };
 
 function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
-  const userId = useUserId();
   const { createStore, isCreating, createStoreError } = useCreateStore();
   const { register, handleSubmit } = useForm<{ name: string }>();
-  const error = createStoreError as AxiosError;
 
   function onFormSubmit({ name }: { name: string }) {
-    const payload: CreateStorePayload = {
-      name,
-      ownerId: userId,
-    };
-    createStore(payload);
+    createStore({ name });
   }
 
   return (
@@ -34,6 +25,7 @@ function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
       <Dialog
         as="div"
         className="relative z-10"
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         onClose={mustComplete ? () => {} : closeModal}
       >
         <Transition.Child
@@ -59,7 +51,7 @@ function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="dark:border-darkAccent relative w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all dark:border dark:bg-charcoal">
+              <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all dark:border dark:border-darkAccent dark:bg-charcoal">
                 {!mustComplete && (
                   <button
                     className="absolute right-4 top-2"
@@ -74,7 +66,7 @@ function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
                 >
                   Create store
                 </Dialog.Title>
-                <div className="dark:text-darkMutedText text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-darkMutedText">
                   Add a new store to manage products and categories
                 </div>
                 <div className="flex flex-col gap-1 pt-5">
@@ -84,20 +76,17 @@ function CreateStoreModal({ isOpen, closeModal, mustComplete }: Props) {
                   <input
                     type="text"
                     id="name"
-                    className="dark:border-darkAccent w-full rounded-lg border border-gray-200 p-2 focus:outline-none dark:bg-charcoal"
+                    className="w-full rounded-lg border border-gray-200 p-2 focus:outline-none dark:border-darkAccent dark:bg-charcoal"
                     {...register("name")}
                     required
                   />
                 </div>
-                {error && (
-                  <div className="relative flex items-center pt-2 text-sm text-red-600">
+                {!!createStoreError && (
+                  <div className="relative flex items-center pt-2 text-sm text-red-600 dark:text-red-400">
                     <div className="absolute top-3 grid place-items-center">
                       <MdErrorOutline />
                     </div>
-                    <span className="ml-4">
-                      {(error.response?.data as string) ||
-                        "An unexpected error occured"}
-                    </span>
+                    <span className="ml-4">{createStoreError.message}</span>
                   </div>
                 )}
                 <div className="flex justify-end gap-2 pt-4">

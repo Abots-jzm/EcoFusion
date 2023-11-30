@@ -1,11 +1,7 @@
-import { Metadata } from "next";
-import { getServerSession } from "next-auth";
+import { type Metadata } from "next";
 import React from "react";
-import { authoptions } from "../api/auth/[...nextauth]/options";
-import { redirect } from "next/navigation";
 import InitialRouteProvider from "@/components/dashboard/InitialRouteProvider";
-import { Store, User } from "@prisma/client";
-import prisma from "@/libs/prismadb";
+import { api } from "@/trpc/server";
 
 export const metadata: Metadata = {
   title: "EcoFusion | Dashboard",
@@ -16,27 +12,7 @@ type Props = {
 };
 
 async function DashboardLayout({ children }: Props) {
-  const serverSession = await getServerSession(authoptions);
-  if (!serverSession?.user) {
-    redirect("/login");
-  }
-
-  const userId = serverSession.user.id;
-  const userPromise = prisma.user.findFirst({
-    where: { id: userId },
-  });
-  const storesPromise = prisma.store.findMany({
-    where: { ownerId: userId },
-  });
-
-  const [userWithPassword, stores] = (await Promise.all([
-    userPromise,
-    storesPromise,
-  ])) as [User, Store[]];
-
-  if (!userWithPassword) redirect("/login");
-
-  const { hashedPassword, ...user } = userWithPassword;
+  const { stores, user } = await api.users.getInitialData.query();
 
   return (
     <InitialRouteProvider user={user} stores={stores}>

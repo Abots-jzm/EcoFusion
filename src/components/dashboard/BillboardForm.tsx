@@ -21,7 +21,7 @@ type FormData = {
 type Props = {
   buttonTxt: string;
   storeId: string;
-  initialData?: any; //TODO
+  initialData?: string; //TODO
 };
 
 function BillboardForm({ buttonTxt, initialData, storeId }: Props) {
@@ -30,7 +30,7 @@ function BillboardForm({ buttonTxt, initialData, storeId }: Props) {
   const {
     errors: { newImage, presetUrl, label: labelError },
   } = formState;
-  const bgError = newImage || presetUrl;
+  const bgError = newImage ?? presetUrl;
 
   const [presetPriority, setPresetPriority] = useState<
     "url" | "upload" | undefined
@@ -50,9 +50,9 @@ function BillboardForm({ buttonTxt, initialData, storeId }: Props) {
   const { createBillboardUpload, isUploading } = useCreateBillboardUpload();
   const showSpinner = isUploading || isCreating;
 
-  function onFormSubmit({ label, newImage, presetUrl }: FormData) {
+  async function onFormSubmit({ label, newImage, presetUrl }: FormData) {
     if (presetPriority === "upload" && !!newImage?.[0])
-      createBillboardUpload([newImage[0]], { storeId, label });
+      await createBillboardUpload([newImage[0]], { storeId, label });
     if (presetPriority === "url" && !!presetUrl)
       createBillboard({ label, storeId, imageUrl: presetUrl });
   }

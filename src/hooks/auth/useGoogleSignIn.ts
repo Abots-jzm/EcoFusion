@@ -1,11 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { TRPCClientError } from "@trpc/client";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 async function googleSignIn() {
   const res = await signIn("google");
-  if (res?.error) throw new AxiosError(res.error);
+
+  if (res?.error) throw new TRPCClientError(res.error);
 
   return res;
 }
@@ -17,7 +18,7 @@ function useGoogleSignIn() {
 
   const { mutate, isLoading, error } = useMutation({
     mutationFn: googleSignIn,
-    onSuccess: () => router.replace(callbackUrl || "/dashboard"),
+    onSuccess: () => router.replace(callbackUrl ?? "/dashboard"),
   });
 
   return {

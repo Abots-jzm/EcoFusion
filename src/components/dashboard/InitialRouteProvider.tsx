@@ -1,9 +1,8 @@
 "use client";
 
-import { User } from "@/hooks/auth/types";
 import useGetUser from "@/hooks/auth/useGetUser";
 import useGetUserStores from "@/hooks/store/useGetUserStores";
-import { Store } from "@prisma/client";
+import type { Store, User } from "@/trpc/shared";
 import { redirect, usePathname } from "next/navigation";
 import React, { useEffect } from "react";
 

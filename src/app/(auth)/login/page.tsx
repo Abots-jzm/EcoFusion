@@ -1,20 +1,34 @@
 "use client";
 
-import { Credentials } from "@/app/api/users/types";
+import { z } from "zod";
 import AuthForm from "@/components/auth/AuthForm";
 import useGoogleSignIn from "@/hooks/auth/useGoogleSignIn";
 import useLogin from "@/hooks/auth/useLogin";
-import { AxiosError } from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type TRPCError } from "@trpc/server";
 import { useForm } from "react-hook-form";
+import type { Credentials } from "@/trpc/shared";
 
 function Login() {
-  const { register, handleSubmit } = useForm<Credentials>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Credentials>({
+    resolver: zodResolver(
+      z.object({
+        email: z.string().email("Invalid email address").trim(),
+        password: z
+          .string()
+          .min(6, "Password must be at least 6 characters long")
+          .trim(),
+      }),
+    ),
+  });
   const { login, isLoggingIn, loginError } = useLogin();
-  const { googleSignIn, isSigningInWithGoogle, googleSignInError } =
-    useGoogleSignIn();
+  const typedError = loginError as TRPCError | null;
 
-  const typedError = loginError as AxiosError;
-  const typedGoogleError = googleSignInError as AxiosError;
+  const { googleSignIn, isSigningInWithGoogle } = useGoogleSignIn();
 
   function onFormSubmit(credentials: Credentials) {
     login(credentials);
@@ -30,7 +44,8 @@ function Login() {
       handleSubmit={handleSubmit(onFormSubmit)}
       title="Login"
       isLoading={isLoggingIn}
-      error={typedError}
+      errors={errors}
+      apiErrorMessage={typedError?.message}
       otherPageData={{
         link: "/register",
         linkQuestion: "Don't have an account?",
@@ -39,7 +54,6 @@ function Login() {
       showOtherSigninOptions
       googleSignInOptions={{
         onGoogleSignIn,
-        googleSignInError: typedGoogleError,
         isSigningInWithGoogle,
       }}
     />

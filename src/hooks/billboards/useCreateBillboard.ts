@@ -1,17 +1,10 @@
-import { CreateBillBoardPayload } from "@/app/api/uploadthing/core";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { api } from "@/context/Providers";
 import { useRouter } from "next/navigation";
-
-async function createBillboard(payload: CreateBillBoardPayload) {
-  await axios.post("/api/billboards", payload);
-}
 
 function useCreateBillboard() {
   const router = useRouter();
 
-  const { mutate, isLoading, isError } = useMutation({
-    mutationFn: createBillboard,
+  const { mutate, isLoading, isError } = api.billboards.create.useMutation({
     onSuccess: () => router.back(),
   });
 

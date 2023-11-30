@@ -1,6 +1,5 @@
 "use client";
 
-import useUserId from "@/hooks/auth/useUserId";
 import useDeleteStore from "@/hooks/store/useDeleteStore";
 import { Dialog, Transition } from "@headlessui/react";
 import { useParams } from "next/navigation";
@@ -15,13 +14,12 @@ type Props = {
 };
 
 function DeleteConsentForm({ isOpen, closeModal, storeName }: Props) {
-  const userId = useUserId();
   const { register, handleSubmit, watch } = useForm<{ name: string }>();
   const { deleteStore, isDeleting } = useDeleteStore();
   const storeId = useParams().storeId as string;
 
   function onFormSubmit() {
-    deleteStore({ userId, storeId });
+    deleteStore({ storeId });
   }
 
   return (
@@ -50,7 +48,7 @@ function DeleteConsentForm({ isOpen, closeModal, storeName }: Props) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="dark:border-darkAccent  relative w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all dark:border dark:bg-charcoal">
+              <Dialog.Panel className="relative  w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all dark:border dark:border-darkAccent dark:bg-charcoal">
                 <button className="absolute right-4 top-2" onClick={closeModal}>
                   <MdClose />
                 </button>
@@ -60,7 +58,7 @@ function DeleteConsentForm({ isOpen, closeModal, storeName }: Props) {
                 >
                   Delete store confirmation
                 </Dialog.Title>
-                <div className="dark:text-darkMutedText text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-darkMutedText">
                   All sales and store data will be lost. This action can not be
                   reverted.
                   <br />
@@ -71,7 +69,7 @@ function DeleteConsentForm({ isOpen, closeModal, storeName }: Props) {
                 <div className="flex flex-col gap-1 pt-5">
                   <input
                     type="text"
-                    className="dark:border-darkAccent w-full rounded-lg border border-gray-200 p-2 focus:outline-none dark:bg-charcoal"
+                    className="w-full rounded-lg border border-gray-200 p-2 focus:outline-none dark:border-darkAccent dark:bg-charcoal"
                     {...register("name")}
                     required
                     autoComplete="off"

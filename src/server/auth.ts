@@ -1,16 +1,29 @@
-import bcrypt from "bcrypt";
-import { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import prisma from "@/libs/prismadb";
+import {
+  getServerSession,
+  type DefaultSession,
+  type NextAuthOptions,
+} from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { env } from "@/env";
+import { db } from "@/server/db";
+import bcrypt from "bcrypt";
 
-export const authoptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+declare module "next-auth" {
+  interface Session extends DefaultSession {
+    user: {
+      id: string;
+    } & DefaultSession["user"];
+  }
+}
+
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(db),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_ID || "",
-      clientSecret: process.env.GOOGLE_SECRET || "",
+      clientId: env.GOOGLE_ID,
+      clientSecret: env.GOOGLE_SECRET,
     }),
     CredentialsProvider({
       name: "credentials",
@@ -22,13 +35,13 @@ export const authoptions: NextAuthOptions = {
         if (!credentials?.email || !credentials.password)
           throw new Error("Please enter email and password");
 
-        const user = await prisma.user.findUnique({
+        const user = await db.user.findUnique({
           where: {
             email: credentials.email,
           },
         });
 
-        if (!user || !user.hashedPassword)
+        if (!user?.hashedPassword)
           throw new Error("Incorrect username or password");
 
         const passwordMatch = await bcrypt.compare(
@@ -43,11 +56,11 @@ export const authoptions: NextAuthOptions = {
       },
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: env.NODE_ENV === "development",
   callbacks: {
     session: ({ session, token }) => ({
       ...session,
@@ -61,3 +74,5 @@ export const authoptions: NextAuthOptions = {
     signIn: "/login",
   },
 };
+
+export const getServerAuthSession = () => getServerSession(authOptions);

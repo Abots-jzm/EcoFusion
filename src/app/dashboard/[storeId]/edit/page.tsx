@@ -1,7 +1,6 @@
 "use client";
 
 import DeleteConsentForm from "@/components/dashboard/DeleteConsentForm";
-import useUserId from "@/hooks/auth/useUserId";
 import useEditStore from "@/hooks/store/useEditStore";
 import useGetUserStores from "@/hooks/store/useGetUserStores";
 import { useParams } from "next/navigation";
@@ -11,7 +10,6 @@ import { useForm } from "react-hook-form";
 function Settings() {
   const { userStores } = useGetUserStores();
   const storeId = useParams().storeId as string;
-  const userId = useUserId();
   const { editStore, editingStore } = useEditStore();
   const currentStore = useMemo(
     () => userStores?.find((store) => store.id === storeId),
@@ -25,7 +23,7 @@ function Settings() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   function onStoreEdit({ name }: { name: string }) {
-    editStore({ name, userId, storeId });
+    editStore({ name, storeId });
   }
 
   return (
@@ -69,7 +67,7 @@ function Settings() {
       <DeleteConsentForm
         isOpen={showDeleteModal}
         closeModal={() => setShowDeleteModal(false)}
-        storeName={currentStore?.name || ""}
+        storeName={currentStore?.name ?? ""}
       />
     </>
   );

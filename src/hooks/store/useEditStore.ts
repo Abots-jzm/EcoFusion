@@ -1,25 +1,12 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import useUserId from "../auth/useUserId";
-import axios from "axios";
-import { Store } from "@prisma/client";
-import { EditStorePayload } from "@/app/api/stores/types";
-
-async function editStore(payload: EditStorePayload) {
-  const store = await axios.patch<Store>(
-    `/api/stores/${payload.storeId}/edit`,
-    payload,
-  );
-  return store.data;
-}
+import { api } from "@/context/Providers";
 
 function useEditStore() {
-  const queryClient = useQueryClient();
-  const userId = useUserId();
+  const utils = api.useUtils();
 
-  const { mutate, isLoading, error } = useMutation({
-    mutationFn: editStore,
+  const { mutate, isLoading, error } = api.stores.edit.useMutation({
     onSuccess() {
-      queryClient.invalidateQueries([userId, "stores"]);
+      void utils.users.getInitialData.invalidate();
+      void utils.users.getStores.invalidate();
     },
   });
 

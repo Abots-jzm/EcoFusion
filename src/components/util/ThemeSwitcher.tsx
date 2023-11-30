@@ -8,7 +8,7 @@ type Props = {
 };
 
 function ThemeSwitcher({ initialTheme }: Props) {
-  const [theme, setTheme] = useState<"light" | "dark">(initialTheme || "light");
+  const [theme, setTheme] = useState<"light" | "dark">(initialTheme ?? "light");
 
   function toggleTheme() {
     if (theme === "light") {

@@ -23,7 +23,7 @@ export default function RootLayout({
       <body
         className={`${quicksand.className} transition-colors dark:bg-charcoal dark:text-lightGray`}
       >
-        <Providers>{children}</Providers>
+        <Providers cookies={cookies().toString()}>{children}</Providers>
       </body>
     </html>
   );

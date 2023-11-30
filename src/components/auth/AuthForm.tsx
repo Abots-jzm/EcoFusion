@@ -1,8 +1,7 @@
-import { Credentials } from "@/app/api/users/types";
-import { AxiosError } from "axios";
+import type { Credentials } from "@/trpc/shared";
 import Link from "next/link";
 import React from "react";
-import { UseFormRegister } from "react-hook-form";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { IoLogoGoogle } from "react-icons/io";
 import { MdEmail, MdErrorOutline, MdLock } from "react-icons/md";
 
@@ -11,7 +10,8 @@ type Props = {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   title: string;
   isLoading: boolean;
-  error?: AxiosError;
+  errors: FieldErrors<Credentials>;
+  apiErrorMessage?: string;
   showOtherSigninOptions?: boolean;
   otherPageData: {
     link: string;
@@ -21,7 +21,6 @@ type Props = {
   googleSignInOptions?: {
     onGoogleSignIn: () => void;
     isSigningInWithGoogle: boolean;
-    googleSignInError: AxiosError;
   };
 };
 
@@ -30,7 +29,8 @@ function AuthForm({
   handleSubmit,
   title,
   isLoading,
-  error,
+  errors,
+  apiErrorMessage,
   showOtherSigninOptions,
   googleSignInOptions,
   otherPageData,
@@ -47,9 +47,9 @@ function AuthForm({
             {...register("email")}
             id="email"
             type="email"
-            className="dark:border-darkAccent w-full rounded-lg border border-gray-300 p-2 pl-10 placeholder:text-gray-400 dark:bg-charcoal"
+            className="w-full rounded-lg border border-gray-300 p-2 pl-10 placeholder:text-gray-400 dark:border-darkAccent dark:bg-charcoal"
             placeholder="Email"
-            required
+            // required
           />
         </div>
         <div className="relative">
@@ -60,17 +60,33 @@ function AuthForm({
             {...register("password")}
             id="password"
             type="password"
-            className="dark:border-darkAccent w-full rounded-lg border border-gray-300 p-2 pl-10 placeholder:text-gray-400 dark:bg-charcoal"
+            className="w-full rounded-lg border border-gray-300 p-2 pl-10 placeholder:text-gray-400 dark:border-darkAccent dark:bg-charcoal"
             placeholder="Password"
-            required
+            // required
           />
         </div>
-        {error && (
+        {!!apiErrorMessage && (
           <div className="relative flex items-center text-sm text-red-600 dark:text-red-400">
             <div className="absolute top-1 grid place-items-center">
               <MdErrorOutline />
             </div>
-            <span className="ml-4">{error.message}</span>
+            <span className="ml-4">{apiErrorMessage}</span>
+          </div>
+        )}
+        {!!errors.email && (
+          <div className="relative flex items-center text-sm text-red-600 dark:text-red-400">
+            <div className="absolute top-1 grid place-items-center">
+              <MdErrorOutline />
+            </div>
+            <span className="ml-4">{errors.email.message}</span>
+          </div>
+        )}
+        {!!errors.password && (
+          <div className="relative flex items-center text-sm text-red-600 dark:text-red-400">
+            <div className="absolute top-1 grid place-items-center">
+              <MdErrorOutline />
+            </div>
+            <span className="ml-4">{errors.password.message}</span>
           </div>
         )}
         <button
