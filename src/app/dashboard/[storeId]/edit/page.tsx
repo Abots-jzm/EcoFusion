@@ -28,8 +28,8 @@ function Settings() {
 
   return (
     <>
-      <div className="text-3xl font-bold">Edit</div>
-      <div className="text-gray-600 dark:text-darkMutedText">
+      <div className="text-2xl font-bold sm:text-3xl">Edit</div>
+      <div className="text-sm text-gray-600 dark:text-darkMutedText sm:text-base">
         Edit store detials
       </div>
       <form

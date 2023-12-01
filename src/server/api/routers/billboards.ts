@@ -15,4 +15,11 @@ export const billboardsRouter = createTRPCRouter({
         data: { storeId, imageUrl, label },
       });
     }),
+  getUserBillboards: protectedProcedure
+    .input(z.object({ storeId: z.string() }))
+    .query(async ({ ctx, input: { storeId } }) => {
+      return await ctx.db.billboard.findMany({
+        where: { storeId },
+      });
+    }),
 });

@@ -14,6 +14,9 @@ const config = {
         darkAccent: "#3e3e3e",
         darkMutedText: "#777",
       },
+      gridTemplateColumns: {
+        fluid: "repeat(auto-fill, minmax(23rem, 1fr))",
+      },
     },
   },
   plugins: [],

@@ -1,3 +1,5 @@
+"use client";
+
 import { useColor } from "color-thief-react";
 import clsx from "clsx";
 

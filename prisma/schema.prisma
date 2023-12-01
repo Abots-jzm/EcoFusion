@@ -52,13 +52,13 @@ model Store {
 }
 
 model Billboard {
-  id        String     @id @default(cuid())
+  id        String    @id @default(cuid())
   storeId   String
-  Store     Store      @relation(fields: [storeId], references: [id])
+  Store     Store     @relation(fields: [storeId], references: [id])
   imageUrl  String
   label     String?
-  Category  Category[]
-  updatedAt DateTime   @updatedAt
+  Category  Category?
+  updatedAt DateTime  @updatedAt
 }
 
 model Category {
@@ -66,5 +66,5 @@ model Category {
   storeId     String
   Store       Store      @relation(fields: [storeId], references: [id])
   billboard   Billboard? @relation(fields: [billboardId], references: [id])
-  billboardId String?
+  billboardId String?    @unique
 }

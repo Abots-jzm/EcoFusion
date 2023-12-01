@@ -14,9 +14,10 @@ export function getUrl() {
   return getBaseUrl() + "/api/trpc";
 }
 
-export type RouterInputs = inferRouterInputs<AppRouter>;
-export type RouterOutputs = inferRouterOutputs<AppRouter>;
+type RouterInputs = inferRouterInputs<AppRouter>;
+type RouterOutputs = inferRouterOutputs<AppRouter>;
 
 export type Credentials = RouterInputs["users"]["register"];
 export type User = RouterOutputs["users"]["getInitialData"]["user"];
 export type Store = RouterOutputs["users"]["getInitialData"]["stores"][0];
+export type Billboard = RouterOutputs["billboards"]["getUserBillboards"][0]

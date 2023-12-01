@@ -5,7 +5,10 @@ function useCreateBillboard() {
   const router = useRouter();
 
   const { mutate, isLoading, isError } = api.billboards.create.useMutation({
-    onSuccess: () => router.back(),
+    onSuccess() {
+      router.back();
+      router.refresh();
+    },
   });
 
   return {

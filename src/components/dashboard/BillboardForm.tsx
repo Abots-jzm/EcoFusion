@@ -9,22 +9,29 @@ import { MdErrorOutline } from "react-icons/md";
 import { RiImageAddFill } from "react-icons/ri";
 import Image from "next/image";
 import DynamicTextColorComponent from "../util/DynamicTextColor";
-import useCreateBillboard from "@/hooks/billboards/useCreateBillboard";
-import useCreateBillboardUpload from "@/hooks/billboards/upload/generateReactHelpers";
 
 type FormData = {
   presetUrl?: string;
   newImage?: FileList;
   label: string;
 };
+type PresetPriority = "url" | "upload" | undefined;
+
+export type BillboardFormData = FormData & { presetPriority: PresetPriority };
 
 type Props = {
-  buttonTxt: string;
-  storeId: string;
+  buttonTxt: "Create" | "Edit";
   initialData?: string; //TODO
+  isLoading: boolean;
+  onFormSubmit: (data: BillboardFormData) => void;
 };
 
-function BillboardForm({ buttonTxt, initialData, storeId }: Props) {
+function BillboardForm({
+  buttonTxt,
+  initialData,
+  isLoading,
+  onFormSubmit,
+}: Props) {
   const { register, handleSubmit, watch, formState, control } =
     useForm<FormData>();
   const {
@@ -32,9 +39,9 @@ function BillboardForm({ buttonTxt, initialData, storeId }: Props) {
   } = formState;
   const bgError = newImage ?? presetUrl;
 
-  const [presetPriority, setPresetPriority] = useState<
-    "url" | "upload" | undefined
-  >(initialData ? "url" : undefined);
+  const [presetPriority, setPresetPriority] = useState<PresetPriority>(
+    initialData ? "url" : undefined,
+  );
 
   function getCurrentImage() {
     const imageToUpload = watch("newImage")?.[0];
@@ -43,19 +50,17 @@ function BillboardForm({ buttonTxt, initialData, storeId }: Props) {
     if (presetPriority === "url" && watch("presetUrl"))
       return watch("presetUrl");
   }
+
+  function getButtonText() {
+    if (isLoading)
+      if (buttonTxt === "Create") return "Creating";
+      else return "Editing";
+
+    return buttonTxt;
+  }
+
   const currentImage = getCurrentImage();
   const currentBlurData = getPresetBlur(currentImage);
-
-  const { createBillboard, isCreating } = useCreateBillboard();
-  const { createBillboardUpload, isUploading } = useCreateBillboardUpload();
-  const showSpinner = isUploading || isCreating;
-
-  async function onFormSubmit({ label, newImage, presetUrl }: FormData) {
-    if (presetPriority === "upload" && !!newImage?.[0])
-      await createBillboardUpload([newImage[0]], { storeId, label });
-    if (presetPriority === "url" && !!presetUrl)
-      createBillboard({ label, storeId, imageUrl: presetUrl });
-  }
 
   return (
     <div className="flex flex-col justify-between gap-8 lg:flex-row">
@@ -88,7 +93,12 @@ function BillboardForm({ buttonTxt, initialData, storeId }: Props) {
           )}
         </div>
       </div>
-      <form onSubmit={handleSubmit(onFormSubmit)} className="flex-1">
+      <form
+        onSubmit={handleSubmit((data) =>
+          onFormSubmit({ ...data, presetPriority }),
+        )}
+        className="flex-1"
+      >
         <div className="flex h-full flex-col items-start gap-3">
           <div className="hidden font-semibold lg:block">Customize</div>
           <div className="flex flex-col items-start gap-2">
@@ -219,10 +229,10 @@ function BillboardForm({ buttonTxt, initialData, storeId }: Props) {
           <button
             className="mt-5 flex items-center gap-2 rounded-lg border border-black bg-black px-3 py-2 font-medium text-white transition-all hover:bg-white hover:text-black disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white dark:border-lightGray dark:bg-lightGray dark:text-charcoal dark:hover:bg-charcoal dark:hover:text-lightGray dark:disabled:hover:bg-lightGray dark:disabled:hover:text-charcoal lg:mt-auto"
             type="submit"
-            disabled={showSpinner}
+            disabled={isLoading}
           >
-            {buttonTxt}
-            {showSpinner && (
+            {getButtonText()}
+            {isLoading && (
               <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-white group-hover:border-black dark:border-charcoal" />
             )}
           </button>

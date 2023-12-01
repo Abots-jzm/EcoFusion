@@ -60,7 +60,7 @@ function StoreSwitcher({ storeId }: Props) {
     <>
       <Listbox value={selectedStore ?? {}} onChange={handleStoreChange}>
         <div className="relative mt-1">
-          <Listbox.Button className="relative flex w-52 items-center gap-3 rounded-lg border border-gray-200 py-2 pl-3 focus:outline-none dark:border-darkAccent sm:text-sm">
+          <Listbox.Button className="relative flex w-52 items-center gap-3 rounded-lg border border-gray-200 py-2 pl-3 text-sm focus:outline-none dark:border-darkAccent sm:text-base">
             <IoStorefront />
             <span className="block truncate pr-8 font-medium">
               {isGettingStores ? "..." : selectedStore?.name}
@@ -82,7 +82,7 @@ function StoreSwitcher({ storeId }: Props) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-charcoal dark:ring-darkAccent sm:text-sm">
+            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-charcoal dark:ring-darkAccent sm:text-base">
               {userStores?.map((store) => (
                 <Listbox.Option
                   key={store.id}

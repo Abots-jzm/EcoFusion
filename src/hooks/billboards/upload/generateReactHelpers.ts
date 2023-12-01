@@ -8,7 +8,10 @@ function useCreateBillboardUpload() {
   const router = useRouter();
 
   const { isUploading, startUpload } = useUploadThing("imageUploader", {
-    onClientUploadComplete: () => router.back(),
+    onClientUploadComplete() {
+      router.back();
+      router.refresh();
+    },
   });
 
   return { isUploading, createBillboardUpload: startUpload };
