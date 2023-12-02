@@ -8,6 +8,8 @@ const f = createUploadthing();
 const uploadInputParser = z.object({
   storeId: z.string(),
   label: z.string().optional(),
+  mode: z.enum(["edit", "create"]),
+  billboardId: z.string().optional(),
 });
 
 export const ourFileRouter = {
@@ -19,13 +21,20 @@ export const ourFileRouter = {
       return input;
     })
     .onUploadComplete(async ({ file, metadata }) => {
-      await db.billboard.create({
-        data: {
-          storeId: metadata.storeId,
-          imageUrl: file.url,
-          label: metadata.label,
-        },
-      });
+      if (metadata.mode === "create")
+        await db.billboard.create({
+          data: {
+            storeId: metadata.storeId,
+            imageUrl: file.url,
+            label: metadata.label,
+          },
+        });
+
+      if (metadata.mode === "edit" && metadata.billboardId)
+        await db.billboard.update({
+          where: { id: metadata.billboardId },
+          data: { imageUrl: file.url, label: metadata.label },
+        });
 
       return "Success";
     }),

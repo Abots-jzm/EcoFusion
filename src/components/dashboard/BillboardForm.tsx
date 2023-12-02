@@ -9,11 +9,12 @@ import { MdErrorOutline } from "react-icons/md";
 import { RiImageAddFill } from "react-icons/ri";
 import Image from "next/image";
 import DynamicTextColorComponent from "../util/DynamicTextColor";
+import { useRouter } from "next/navigation";
 
 type FormData = {
   presetUrl?: string;
   newImage?: FileList;
-  label: string;
+  label?: string;
 };
 type PresetPriority = "url" | "upload" | undefined;
 
@@ -21,7 +22,7 @@ export type BillboardFormData = FormData & { presetPriority: PresetPriority };
 
 type Props = {
   buttonTxt: "Create" | "Edit";
-  initialData?: string; //TODO
+  initialData?: FormData;
   isLoading: boolean;
   onFormSubmit: (data: BillboardFormData) => void;
 };
@@ -32,8 +33,9 @@ function BillboardForm({
   isLoading,
   onFormSubmit,
 }: Props) {
-  const { register, handleSubmit, watch, formState, control } =
-    useForm<FormData>();
+  const router = useRouter();
+  const { register, handleSubmit, watch, formState, control, clearErrors } =
+    useForm<FormData>({ defaultValues: initialData });
   const {
     errors: { newImage, presetUrl, label: labelError },
   } = formState;
@@ -94,9 +96,19 @@ function BillboardForm({
         </div>
       </div>
       <form
-        onSubmit={handleSubmit((data) =>
-          onFormSubmit({ ...data, presetPriority }),
-        )}
+        onSubmit={handleSubmit((data) => {
+          if (!!initialData)
+            if (
+              data.label === initialData.label &&
+              data.presetUrl === initialData.presetUrl &&
+              !data.newImage
+            ) {
+              router.back();
+              return;
+            }
+
+          onFormSubmit({ ...data, presetPriority });
+        })}
         className="flex-1"
       >
         <div className="flex h-full flex-col items-start gap-3">
@@ -118,6 +130,7 @@ function BillboardForm({
                   onChange={(newValue) => {
                     setPresetPriority("url");
                     field.onChange(newValue);
+                    clearErrors("label");
                   }}
                 >
                   <div className="relative">
@@ -184,6 +197,7 @@ function BillboardForm({
                                   onChange={(e) => {
                                     setPresetPriority("upload");
                                     onChange(e.target.files);
+                                    clearErrors("label");
                                   }}
                                 />
                               )}
@@ -206,11 +220,17 @@ function BillboardForm({
             )}
           </div>
           <div className="flex w-full flex-col gap-2">
-            <div className="text-sm font-semibold">Label (optional)</div>
+            <div className="text-sm font-semibold">
+              Label {presetPriority === "upload" ? "(optional)" : ""}
+            </div>
             <input
               type="text"
               className="w-full rounded-lg border border-gray-300 p-2 text-sm focus:outline-none dark:border-darkAccent dark:bg-charcoal sm:w-96"
               {...register("label", {
+                required: {
+                  value: presetPriority === "url",
+                  message: "A label is required",
+                },
                 maxLength: {
                   value: 35,
                   message: "Label cannot be more than 35 characters long",

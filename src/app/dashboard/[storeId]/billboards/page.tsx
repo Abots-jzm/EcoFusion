@@ -33,15 +33,9 @@ async function BillBoardPage({ params: { storeId } }: Props) {
         </div>
       )}
       {billboards.length !== 0 && (
-        <div className="grid-cols-fluid grid gap-6 py-10">
-          {billboards.map(({ id, imageUrl, label, updatedAt }) => (
-            <BillboardItem
-              key={id}
-              id={id}
-              imageUrl={imageUrl}
-              label={label}
-              lastUpdated={updatedAt}
-            />
+        <div className="grid grid-cols-fluid gap-6 py-10">
+          {billboards.map((billboard) => (
+            <BillboardItem key={billboard.id} {...billboard} />
           ))}
         </div>
       )}

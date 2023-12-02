@@ -54,17 +54,17 @@ model Store {
 model Billboard {
   id        String    @id @default(cuid())
   storeId   String
-  Store     Store     @relation(fields: [storeId], references: [id])
+  Store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   imageUrl  String
   label     String?
+  createdAt DateTime  @default(now())
   Category  Category?
-  updatedAt DateTime  @updatedAt
 }
 
 model Category {
   id          String     @id @default(cuid())
   storeId     String
-  Store       Store      @relation(fields: [storeId], references: [id])
+  Store       Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
   billboard   Billboard? @relation(fields: [billboardId], references: [id])
   billboardId String?    @unique
 }

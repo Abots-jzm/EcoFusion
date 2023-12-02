@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 const { useUploadThing } = generateReactHelpers<UploadRouter>();
 
-function useCreateBillboardUpload() {
+export function useCreateBillboardUpload() {
   const router = useRouter();
 
   const { isUploading, startUpload } = useUploadThing("imageUploader", {
@@ -17,4 +17,15 @@ function useCreateBillboardUpload() {
   return { isUploading, createBillboardUpload: startUpload };
 }
 
-export default useCreateBillboardUpload;
+export function useEditBillboardUpload() {
+  const router = useRouter();
+
+  const { isUploading, startUpload } = useUploadThing("imageUploader", {
+    onClientUploadComplete() {
+      router.back();
+      router.refresh();
+    },
+  });
+
+  return { isUploading, editBillboardUpload: startUpload };
+}

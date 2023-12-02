@@ -3,7 +3,7 @@
 import BillboardForm, {
   type BillboardFormData,
 } from "@/components/dashboard/BillboardForm";
-import useCreateBillboardUpload from "@/hooks/billboards/upload/generateReactHelpers";
+import { useCreateBillboardUpload } from "@/hooks/billboards/upload/generateReactHelpers";
 import useCreateBillboard from "@/hooks/billboards/useCreateBillboard";
 import React from "react";
 
@@ -23,7 +23,11 @@ function NewBillboard({ params: { storeId } }: Props) {
     presetPriority,
   }: BillboardFormData) {
     if (presetPriority === "upload" && !!newImage?.[0])
-      await createBillboardUpload([newImage[0]], { storeId, label });
+      await createBillboardUpload([newImage[0]], {
+        storeId,
+        label,
+        mode: "create",
+      });
     if (presetPriority === "url" && !!presetUrl)
       createBillboard({ label, storeId, imageUrl: presetUrl });
   }

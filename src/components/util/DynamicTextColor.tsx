@@ -6,7 +6,7 @@ import clsx from "clsx";
 type Props = {
   className?: string;
   imageUrl: string;
-  children: string;
+  children: React.ReactNode;
 };
 
 const DynamicTextColorComponent = ({
