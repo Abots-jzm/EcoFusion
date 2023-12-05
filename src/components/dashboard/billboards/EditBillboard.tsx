@@ -7,6 +7,7 @@ import { useEditBillboardUpload } from "@/hooks/billboards/upload/generateReactH
 import useEditBillboard from "@/hooks/billboards/useEditBillboard";
 import type { Billboard } from "@/trpc/shared";
 import React from "react";
+import DashboardHeader from "../DashboardHeader";
 
 type Props = {
   billboard: Billboard;
@@ -37,10 +38,10 @@ function EditBillboard({ billboard: { storeId, label, imageUrl, id } }: Props) {
   return (
     <>
       <div className="mb-6 border-b pb-3 dark:border-b-darkAccent">
-        <div className="text-3xl font-bold">Edit billboard</div>
-        <div className="text-gray-600 dark:text-darkMutedText">
-          Edit an existing billboard
-        </div>
+        <DashboardHeader
+          heading="Edit billboard"
+          subHeading="Edit an existing billboard"
+        />
       </div>
       <BillboardForm
         buttonTxt="Edit"

@@ -1,5 +1,6 @@
 "use client";
 
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DeleteConsentForm from "@/components/dashboard/DeleteConsentForm";
 import useEditStore from "@/hooks/store/useEditStore";
 import useGetUserStores from "@/hooks/store/useGetUserStores";
@@ -28,10 +29,7 @@ function Settings() {
 
   return (
     <>
-      <div className="text-2xl font-bold sm:text-3xl">Edit</div>
-      <div className="text-sm text-gray-600 dark:text-darkMutedText sm:text-base">
-        Edit store detials
-      </div>
+      <DashboardHeader heading="Edit" subHeading="Edit store details" />
       <form
         className="mt-5 flex flex-col items-start gap-3"
         onSubmit={handleSubmit(onStoreEdit)}

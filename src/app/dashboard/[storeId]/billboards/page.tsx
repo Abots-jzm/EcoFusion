@@ -1,3 +1,4 @@
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import BillboardItem from "@/components/dashboard/billboards/BillboardItem";
 import { api } from "@/trpc/server";
 import Link from "next/link";
@@ -14,10 +15,10 @@ async function BillBoardPage({ params: { storeId } }: Props) {
     <>
       <div className="flex items-center justify-between border-b pb-3 dark:border-b-darkAccent">
         <div>
-          <div className="text-2xl font-bold sm:text-3xl">Billboards</div>
-          <div className="text-sm text-gray-600 dark:text-darkMutedText sm:text-base">
-            Manage billboards for your store
-          </div>
+          <DashboardHeader
+            heading="Billboards"
+            subHeading="Manage billboards for your store"
+          />
         </div>
         <Link
           href={`/dashboard/${storeId}/billboards/new`}

@@ -3,6 +3,7 @@
 import BillboardForm, {
   type BillboardFormData,
 } from "@/components/dashboard/BillboardForm";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import { useCreateBillboardUpload } from "@/hooks/billboards/upload/generateReactHelpers";
 import useCreateBillboard from "@/hooks/billboards/useCreateBillboard";
 import React from "react";
@@ -35,10 +36,10 @@ function NewBillboard({ params: { storeId } }: Props) {
   return (
     <>
       <div className="mb-6 border-b pb-3 dark:border-b-darkAccent">
-        <div className="text-3xl font-bold">Create billboard</div>
-        <div className="text-gray-600 dark:text-darkMutedText">
-          Add a new billboard
-        </div>
+        <DashboardHeader
+          heading="Create billboard"
+          subHeading="Add a new billboard"
+        />
       </div>
       <BillboardForm
         buttonTxt="Create"
