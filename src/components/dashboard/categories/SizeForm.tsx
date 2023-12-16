@@ -61,7 +61,7 @@ function SizeForm({ addedSizes, control, setValue }: Props) {
         />
       </div>
       {error && (
-        <p className="mt-2 text-sm text-red-500 dark:text-red-300">{error}</p>
+        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
       )}
       {addedSizes?.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2 text-sm">
@@ -70,7 +70,7 @@ function SizeForm({ addedSizes, control, setValue }: Props) {
               <span>{size}</span>
               <span className="text-gray-300 dark:text-darkMutedText">|</span>
               <button
-                className="text-red-500 dark:text-red-300"
+                className="text-red-600 dark:text-red-400"
                 onClick={() => {
                   setValue(
                     "sizes",

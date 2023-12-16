@@ -7,9 +7,10 @@ import { Controller, useForm } from "react-hook-form";
 import Image from "next/image";
 import DynamicTextColorComponent from "@/components/util/DynamicTextColor";
 import clsx from "clsx";
-import { MdInfo } from "react-icons/md";
+import { MdAdd, MdInfo } from "react-icons/md";
 import ColorForm from "./ColorForm";
 import SizeForm from "./SizeForm";
+import useCreateCategory from "@/hooks/categories/useCreateCategory";
 
 export type ColorField = {
   name: string;
@@ -25,9 +26,12 @@ export type CategoryFormData = {
 
 type Props = {
   billboards: Billboard[];
+  storeId: string;
 };
 
-function CategoryForm({ billboards }: Props) {
+function CategoryForm({ billboards, storeId }: Props) {
+  const { createCategory, isCreating, createCategoryError } =
+    useCreateCategory();
   const { register, handleSubmit, control, watch, clearErrors, setValue } =
     useForm<CategoryFormData>();
 
@@ -35,8 +39,22 @@ function CategoryForm({ billboards }: Props) {
   const addedColors = watch("colors");
   const addedSizes = watch("sizes");
 
-  function handleFormSubmit(data: CategoryFormData) {
-    console.log(data);
+  function handleFormSubmit({
+    name,
+    sizes,
+    billboard,
+    colors,
+  }: CategoryFormData) {
+    createCategory({
+      name,
+      storeId,
+      billboardId: billboard.id,
+      colors,
+      sizes:
+        !sizes || sizes.length === 0
+          ? undefined
+          : sizes.map((size) => ({ name: size })),
+    });
   }
 
   return (
@@ -212,13 +230,19 @@ function CategoryForm({ billboards }: Props) {
       <button
         className="mt-5 flex items-center gap-2 self-start rounded-lg border border-black bg-black px-3 py-2 font-medium text-white transition-all hover:bg-white hover:text-black disabled:opacity-50 disabled:hover:bg-black disabled:hover:text-white dark:border-lightGray dark:bg-lightGray dark:text-charcoal dark:hover:bg-charcoal dark:hover:text-lightGray dark:disabled:hover:bg-lightGray dark:disabled:hover:text-charcoal"
         type="submit"
-        // disabled={isLoading}
+        disabled={isCreating}
       >
-        Create
-        {/* {isLoading && (
+        {isCreating ? "Creating" : "Create"}
+        {!isCreating && <MdAdd />}
+        {isCreating && (
           <div className="h-5 w-5 animate-spin rounded-full border-l-2 border-white group-hover:border-black dark:border-charcoal" />
-        )} */}
+        )}
       </button>
+      {!!createCategoryError && (
+        <div className="text-sm text-red-600 dark:text-red-400">
+          {createCategoryError.message}
+        </div>
+      )}
     </form>
   );
 }

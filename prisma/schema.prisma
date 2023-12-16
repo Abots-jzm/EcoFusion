@@ -62,31 +62,31 @@ model Billboard {
 }
 
 model Category {
-  id          String     @id @default(cuid())
+  id          String    @id @default(cuid())
   storeId     String
-  Store       Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  Store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   name        String
-  billboard   Billboard? @relation(fields: [billboardId], references: [id])
-  billboardId String?    @unique
+  billboard   Billboard @relation(fields: [billboardId], references: [id])
+  billboardId String    @unique
   colors      Color[]
   sizes       Size[]
 }
 
 model Color {
-  id         String    @id @default(cuid())
+  id         String   @id @default(cuid())
   name       String
   hex        String
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
+  Category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
 
   @@index([categoryId, name])
 }
 
 model Size {
-  id         String    @id @default(cuid())
-  name       String    @unique
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
+  id         String   @id @default(cuid())
+  name       String   @unique
+  Category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
 
   @@unique([categoryId, name])
 }

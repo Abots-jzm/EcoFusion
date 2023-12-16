@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { TRPCError } from "@trpc/server";
 
 export const categoriesRouter = createTRPCRouter({
   create: protectedProcedure
@@ -24,7 +25,20 @@ export const categoriesRouter = createTRPCRouter({
       }),
     )
     .mutation(
-      async ({ ctx, input: { name, storeId, billboardId, colors } }) => {
+      async ({ ctx, input: { name, storeId, billboardId, colors, sizes } }) => {
+        const existingCategory = await ctx.db.category.findFirst({
+          where: {
+            name,
+          },
+        });
+
+        if (existingCategory) {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: `Category with the name "${name}" already exists`,
+          });
+        }
+
         const category = await ctx.db.category.create({
           data: {
             name,
@@ -33,9 +47,12 @@ export const categoriesRouter = createTRPCRouter({
             colors: {
               create: colors,
             },
+            sizes: {
+              create: sizes,
+            },
           },
         });
-        return null;
+        return category;
       },
     ),
 });

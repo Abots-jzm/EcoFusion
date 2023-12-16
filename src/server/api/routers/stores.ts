@@ -18,7 +18,7 @@ export const storesRouter = createTRPCRouter({
       const exist = await ctx.db.store.findFirst({ where: { name } });
       if (exist)
         throw new TRPCError({
-          code: "BAD_REQUEST",
+          code: "CONFLICT",
           message: `A store with the name ${name} already exists`,
         });
       const store = await ctx.db.store.create({ data: { name, ownerId } });

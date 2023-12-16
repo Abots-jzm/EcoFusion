@@ -18,7 +18,7 @@ async function NewCategoryPage({ params: { storeId } }: Props) {
           subHeading="Add a new category"
         />
       </div>
-      <CategoryForm billboards={billboards}/>
+      <CategoryForm billboards={billboards} storeId={storeId} />
     </>
   );
 }

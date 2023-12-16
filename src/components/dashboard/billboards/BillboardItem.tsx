@@ -41,7 +41,7 @@ function BillboardItem({ imageUrl, label, id, storeId }: Props) {
           <MdModeEdit />
         </Link>
         <button
-          className="group relative z-10 grid h-8 w-8 translate-x-0 translate-y-20 transform place-items-center rounded-full bg-red-500 text-xl text-white transition-all hover:opacity-50 disabled:opacity-50 group-hover:translate-x-4 group-hover:translate-y-0"
+          className="group relative z-10 grid h-8 w-8 translate-x-0 translate-y-20 transform place-items-center rounded-full bg-red-600 text-xl text-white transition-all hover:opacity-50 disabled:opacity-50 group-hover:translate-x-4 group-hover:translate-y-0"
           disabled={isDeleting}
           onClick={() => deleteBillboard({ id, storeId })}
         >
