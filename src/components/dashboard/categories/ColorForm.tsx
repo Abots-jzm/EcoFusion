@@ -23,7 +23,7 @@ function ColorForm({ addedColors, control, setValue }: Props) {
 
   return (
     <>
-      <div className="flex w-96 items-center gap-2 pt-2">
+      <div className="flex w-full items-center gap-2 pt-2 sm:w-96">
         <Controller
           name="colors"
           control={control}
@@ -53,7 +53,7 @@ function ColorForm({ addedColors, control, setValue }: Props) {
                   leaveFrom="opacity-100 translate-y-0"
                   leaveTo="opacity-0 translate-y-1"
                 >
-                  <Popover.Panel className="absolute bottom-10 z-20 overflow-auto rounded-md bg-white p-3 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-charcoal dark:ring-darkAccent sm:bottom-auto sm:mt-1 sm:text-base">
+                  <Popover.Panel className="absolute bottom-10 right-0 z-20 overflow-auto rounded-md bg-white p-3 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none dark:bg-charcoal dark:ring-darkAccent sm:bottom-auto sm:mt-1 sm:text-base">
                     <div className="small custom-pointers">
                       <HexColorPicker
                         color={currentColor}
@@ -107,8 +107,8 @@ function ColorForm({ addedColors, control, setValue }: Props) {
       )}
       {addedColors?.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2 text-sm">
-          {addedColors.map((color) => (
-            <div className="flex items-center gap-2 rounded-lg border border-gray-300 p-2 dark:border-darkAccent">
+          {addedColors.map((color, index) => (
+            <div className="flex items-center gap-2 rounded-lg border border-gray-300 p-2 dark:border-darkAccent" key={index}>
               <div
                 className="h-4 w-4 rounded-full border border-gray-300 dark:border-darkAccent"
                 style={{ backgroundColor: color.hex }}

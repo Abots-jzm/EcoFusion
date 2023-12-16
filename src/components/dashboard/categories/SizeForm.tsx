@@ -19,7 +19,7 @@ function SizeForm({ addedSizes, control, setValue }: Props) {
 
   return (
     <>
-      <div className="flex w-96 items-center gap-2 pt-2">
+      <div className="flex w-full items-center gap-2 pt-2 sm:w-96">
         <Controller
           name="sizes"
           control={control}
@@ -65,8 +65,11 @@ function SizeForm({ addedSizes, control, setValue }: Props) {
       )}
       {addedSizes?.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2 text-sm">
-          {addedSizes.map((size) => (
-            <div className="flex items-center gap-2 rounded-lg border border-gray-300 p-2 dark:border-darkAccent">
+          {addedSizes.map((size, index) => (
+            <div
+              className="flex items-center gap-2 rounded-lg border border-gray-300 p-2 dark:border-darkAccent"
+              key={index}
+            >
               <span>{size}</span>
               <span className="text-gray-300 dark:text-darkMutedText">|</span>
               <button
