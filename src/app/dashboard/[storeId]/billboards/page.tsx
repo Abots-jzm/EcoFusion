@@ -9,7 +9,7 @@ type Props = {
 };
 
 async function BillBoardPage({ params: { storeId } }: Props) {
-  const billboards = await api.billboards.getUserBillboards.query({ storeId });
+  const billboards = await api.billboards.getStoreBillboards.query({ storeId });
 
   return (
     <>

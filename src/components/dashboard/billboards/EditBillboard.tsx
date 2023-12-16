@@ -2,11 +2,10 @@
 
 import BillboardForm, {
   type BillboardFormData,
-} from "@/components/dashboard/BillboardForm";
+} from "@/components/dashboard/billboards/BillboardForm";
 import { useEditBillboardUpload } from "@/hooks/billboards/upload/generateReactHelpers";
 import useEditBillboard from "@/hooks/billboards/useEditBillboard";
 import type { Billboard } from "@/trpc/shared";
-import React from "react";
 import DashboardHeader from "../DashboardHeader";
 
 type Props = {

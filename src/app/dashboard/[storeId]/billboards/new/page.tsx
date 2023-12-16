@@ -2,11 +2,10 @@
 
 import BillboardForm, {
   type BillboardFormData,
-} from "@/components/dashboard/BillboardForm";
+} from "@/components/dashboard/billboards/BillboardForm";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import { useCreateBillboardUpload } from "@/hooks/billboards/upload/generateReactHelpers";
 import useCreateBillboard from "@/hooks/billboards/useCreateBillboard";
-import React from "react";
 
 type Props = {
   params: { storeId: string };

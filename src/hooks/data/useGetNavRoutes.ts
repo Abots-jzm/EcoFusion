@@ -13,12 +13,12 @@ function useGetNavRoutes(storeId: string, pathname: string) {
     {
       href: `/dashboard/${storeId}/categories`,
       label: "Categories",
-      isActive: pathname === `/dashboard/${storeId}/categories`,
+      isActive: pathname.startsWith(`/dashboard/${storeId}/categories`),
     },
     {
       href: `/dashboard/${storeId}/products`,
       label: "Products",
-      isActive: pathname === `/dashboard/${storeId}/products`,
+      isActive: pathname.startsWith(`/dashboard/${storeId}/products`),
     },
     {
       href: `/dashboard/${storeId}/orders`,

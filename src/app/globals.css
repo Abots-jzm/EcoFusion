@@ -7,3 +7,24 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
+
+.small .react-colorful {
+  width: 160px;
+  height: 120px;
+}
+
+.small .react-colorful__hue {
+  height: 20px;
+}
+
+.custom-pointers .react-colorful__saturation-pointer {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+}
+
+.custom-pointers .react-colorful__hue-pointer,
+.custom-pointers .react-colorful__alpha-pointer {
+  width: 16px;
+  border-radius: 3px;
+}
