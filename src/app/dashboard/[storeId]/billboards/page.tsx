@@ -33,7 +33,7 @@ async function BillBoardPage({ params: { storeId } }: Props) {
           You don't have any billboards yet.
         </div>
       )}
-      {billboards.length !== 0 && (
+      {billboards.length > 0 && (
         <div className="grid grid-cols-fluid gap-6 py-10">
           {billboards.map((billboard) => (
             <BillboardItem key={billboard.id} {...billboard} />

@@ -55,4 +55,22 @@ export const categoriesRouter = createTRPCRouter({
         return category;
       },
     ),
+  getStoreCategories: protectedProcedure
+    .input(
+      z.object({
+        storeId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input: { storeId } }) => {
+      const categories = await ctx.db.category.findMany({
+        where: {
+          storeId,
+        },
+        include: {
+          colors: true,
+          sizes: true,
+        },
+      });
+      return categories;
+    }),
 });
