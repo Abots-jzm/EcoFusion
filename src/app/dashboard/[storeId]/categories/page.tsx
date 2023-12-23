@@ -1,4 +1,5 @@
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import CategoryTable from "@/components/dashboard/categories/CategoryTable";
 import { api } from "@/trpc/server";
 import Link from "next/link";
 import React from "react";
@@ -30,16 +31,10 @@ async function CategoriesPage({ params: { storeId } }: Props) {
       </div>
       {categories.length === 0 && (
         <div className="mt-14 text-center">
-          You don't have any billboards yet.
+          You don't have any categories yet.
         </div>
       )}
-      {categories.length > 0 && (
-        <div className="mt-10">
-          {categories.map((category) => (
-            <div>{category.name}</div>
-          ))}
-        </div>
-      )}
+      {categories.length > 0 && <CategoryTable categories={categories} />}
     </>
   );
 }

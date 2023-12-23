@@ -69,6 +69,7 @@ export const categoriesRouter = createTRPCRouter({
         include: {
           colors: true,
           sizes: true,
+          billboard: true,
         },
       });
       return categories;

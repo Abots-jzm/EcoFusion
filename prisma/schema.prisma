@@ -70,6 +70,7 @@ model Category {
   billboardId String    @unique
   colors      Color[]
   sizes       Size[]
+  lastUpdated DateTime  @updatedAt
 }
 
 model Color {

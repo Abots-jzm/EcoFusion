@@ -21,3 +21,4 @@ export type Credentials = RouterInputs["users"]["register"];
 export type User = RouterOutputs["users"]["getInitialData"]["user"];
 export type Store = RouterOutputs["users"]["getInitialData"]["stores"][0];
 export type Billboard = RouterOutputs["billboards"]["getStoreBillboards"][0];
+export type StoreCategories = RouterOutputs["categories"]["getStoreCategories"];
